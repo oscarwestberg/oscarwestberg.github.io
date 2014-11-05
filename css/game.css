@@ -1,0 +1,13 @@
+html, body {
+	height: 100%;
+	margin: 0;
+	background-color: darkgray;
+}
+
+canvas {
+	background-color: black;
+}
+
+.selected {
+      border: 1px solid #0000ff;
+  }
