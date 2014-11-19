@@ -1,24 +1,60 @@
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+var c = document.getElementById('Canvas');
+var ctx = c.getContext("2d");
+var columnY = [];
+var letter2DArray = [];
 
-var renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
+function setUp() {
+	c.width = window.innerWidth;
+	c.height = window.innerHeight;
 
-var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-var cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
+	letterSize = 20;
+	ctx.font = letterSize + "px Georgia";
+	//letters = "田由甲申甴电甶男甸甹町画甼甽甾甿畀畁畂畃畄畅畆畇畈畉畊畋界畍畎畏畐畑";
+	letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ";
+	columns = c.width/letterSize;
+	rows = c.height/letterSize;
 
-camera.position.z = 5;
+	// Initialize columns
+	for (var i = 0; i < columns; i++) {
+		columnY[i] = - letterSize * (Math.floor((Math.random() * (rows + rows/2)) + 1));
+	}
 
-var render = function () {
-	requestAnimationFrame( render );
+	// Initialize letters
+	for (var i = 0; i < columns; i++) {
+		letter2DArray[i] = [];
+		for (var j = 0; j < rows; j++) {
+			letter2DArray[i][j] = Math.floor(Math.random() * letters.length);
+		}
+	}
+}
 
-	cube.rotation.x += 0.1;
-	cube.rotation.y += 0.1;
+function draw() {
+	ctx.clearRect(0, 0, c.width, c.height);
 
-	renderer.render(scene, camera);
-};
+	var even = 0;
 
-render();
+	for (var i = 0; i < columns; i++) {
+		var alpha = 0.8;
+		var decay = 40;
+
+		columnY[i] += letterSize;
+
+    	if (columnY[i] >= c.height + decay * letterSize)
+    		columnY[i] = letterSize;
+
+		for (var j = 0; j < decay; j++) {	
+			var arrayPosY = columnY[i]/letterSize - j - 1;
+			var tempLetter = letter2DArray[i][arrayPosY];
+
+			ctx.fillStyle = "rgba(0, 185, 53, " + alpha + ")";
+	    	ctx.fillText(letters[tempLetter], letterSize * i, columnY[i] - j * letterSize);
+
+	    	alpha -= 1/decay;
+    	}
+
+
+	}
+}
+
+setUp();
+setInterval(draw, 50);
