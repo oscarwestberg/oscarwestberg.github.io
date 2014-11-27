@@ -4,10 +4,7 @@
 		Add GLSL image
 	-Content-
 		Add info paragraph
-		Align buttons correctly for small windows
 		Add text to header buttons
-	-Links-
-		Add links to hedaer buttons
 -->
 <!DOCTYPE html>
 <html>
@@ -26,10 +23,18 @@
     	</div>
     	<div id="title-buttons">
     		<ul>
-    			<li class="nav-item"><img src="img/ic_quick_contacts_mail_white_36dp.png" height="25px" width="25px" alt="Work Icon"/></li>
-    			<li class="nav-item"><img src="img/ic_edit_white_36dp.png" height="25px" width="25px" alt="Work Icon"/></li>
-    			<li class="nav-item"><img src="img/ic_laptop_windows_white_36dp.png" height="25px" width="25px" alt="Work Icon"/></li>
-	    		<li class="nav-item"><img src="img/ic_work_white_36dp.png" height="25px" width="25px" alt="Work Icon"/></li>
+    			<a href="#contact">
+    				<li class="nav-item"><img src="img/ic_quick_contacts_mail_white_36dp.png" height="25px" width="25px" alt="Work Icon"/></li>
+    			</a>
+    			<a href="#artwork">
+    				<li class="nav-item"><img src="img/ic_edit_white_36dp.png" height="25px" width="25px" alt="Work Icon"/></li>
+    			</a>
+    			<a href="#projects">
+    				<li class="nav-item"><img src="img/ic_laptop_windows_white_36dp.png" height="25px" width="25px" alt="Work Icon"/></li>
+    			</a>
+    			<a href="#work">
+	    			<li class="nav-item"><img src="img/ic_work_white_36dp.png" height="25px" width="25px" alt="Work Icon"/></li>
+	    		</a>
     		</ul>
     	</div>	
     </nav>
@@ -42,6 +47,7 @@
 			</div> 
 			-->
 			<h1 class="turn">WORK</h1>
+			<a name="work" class="anchor"/>
 			<ul class="items">
 				<a href="http://visiarc.com"><li class="item">
 					<img src="img/visiarc.png" width="180" height="180" alt=""/>
@@ -63,6 +69,7 @@
 			
 			<!-- Game of Domes, Particle system, webgl shader example, smoothed hydrodynamics, shadowmap -->
 			<h1 class="turn">PROJECTS</h1>
+			<a name="projects" class="anchor"/>
 			<ul class="items">
 				<a href="webgl/index.html"><li class="item">
 					<img src="img/shadowmap.jpg" width="180" height="180" alt=""/>
@@ -98,6 +105,7 @@
 			</ul>
 
 			<h1 class="turn">ARTWORK</h1>
+			<a name="artwork" class="anchor"/>
 			<ul class="items">
 				<a href="http://gugurkan.tumblr.com/post/87522621766/drawing-42-postbird-wearing-clothes-and-all"><li class="item clear">
 					<img src="img/birdie.jpg" width="180" height="180" alt=""/>
@@ -189,16 +197,16 @@
 			</ul>
 
 			<h1 class="turn">CONTACT</h1>
-			
+			<a name="contact" class="anchor"/>
 			<ul class="items">
-				<a href="https://github.com/oscarwestberg"><li class="item circle clear">
-					<img src="img/GitHub.png" height="180" alt=""/>
+				<a href="https://github.com/oscarwestberg"><li class="item clear">
+					<img src="img/GitHub.png"  width="180" style="padding-top: 47px;" alt=""/>
 				</li></a>
-				<a href="https://twitter.com/oscarwestberg"><li class="item circle clear">
-					<img src="img/Twitter.png" width="180" alt=""/>
+				<a href="https://twitter.com/oscarwestberg"><li class="item clear">
+					<img src="img/Twitter.png" width="120" style="padding: 35px;" alt=""/>
 				</li></a>
-				<a href="http://se.linkedin.com/in/oscarwestberg/"><li class="item circle clear">
-					<img src="img/LinkedIn.png" height="180" alt=""/>
+				<a href="http://se.linkedin.com/in/oscarwestberg/"><li class="item clear">
+					<img src="img/LinkedIn.png" width="120" style="padding: 35px;" alt=""/>
 				</li></a>
 			</ul>
 		</div>

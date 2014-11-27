@@ -44,10 +44,6 @@ nav {
 	right: 5%;
 }
 
-#title-buttons ul {
-	width: auto;
-}
-
 li.nav-item {
 	background-color: black;
 	border-radius: 4px;
@@ -180,6 +176,13 @@ a:visited {
 	overflow: hidden;
 }
 
+.anchor {
+	display: block; 
+	position: relative; 
+	top: -150px; 
+	visibility: hidden;
+}
+
 @media (max-width: 700px) {
 	nav {
 		height: 120px;
@@ -199,12 +202,12 @@ a:visited {
 		padding-left: 20px;
 	}
 	#title-buttons {
-		display: block;
 		top: 45px;
-		right: auto;
-		margin-left: auto;
-    	margin-right: auto
-	}
+		width: 255px;
+		position: absolute;
+		left: 50%;
+		margin-left: -150px;
+   	}
 	h1.turn {
 		margin-left: -75px;
 		margin-top: 80px;
