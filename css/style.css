@@ -166,7 +166,7 @@ footer {
 	height: 10%;
 }
 
-a:visited {
+a, a:visited {
 	color: white;
 }
 

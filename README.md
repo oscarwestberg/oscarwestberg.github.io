@@ -1,6 +1,3 @@
-oscarwestberg.github.io
-=======================
-
 # Oscar Westberg's Website
 Displays work, projects, artwork and contact information.
 
