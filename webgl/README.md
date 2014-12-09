@@ -7,3 +7,6 @@ A WebGL implementation of planet generation. The user inputs parameters which in
 * Real time using shaders
 * Dynamic level of detail
 * Bump mapping
+
+## Additional TODOs
+* Loading screen

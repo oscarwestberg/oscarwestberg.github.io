@@ -1,6 +1,8 @@
+varying float level;
+
 void main() {
-  gl_FragColor = vec4(1.0,  // R
-                      0.5,  // G
-                      0.5,  // B
-                      1.0); // A
+	float r = level;
+	float g = level;
+	float b = level;
+  gl_FragColor = vec4(r, g, b, 1.0);
 }

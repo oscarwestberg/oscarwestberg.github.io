@@ -5,3 +5,4 @@ Displays work, projects, artwork and contact information.
 * [Three.js](https://github.com/mrdoob/three.js)
 * [JQuery](http://jquery.com)
 * [WebGL Shader Loader JS](https://github.com/codecruzer/webgl-shader-loader-js)
+* [WebGL-Noise](https://github.com/ashima/webgl-noise)
