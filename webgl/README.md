@@ -8,5 +8,6 @@ A WebGL implementation of planet generation. The user inputs parameters which in
 * Dynamic level of detail
 * Bump mapping
 
-## Additional TODOs
+## Extra TODOs
 * Loading screen
+* Add onWindowResize()
