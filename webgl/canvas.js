@@ -16,11 +16,20 @@ var clock = new THREE.Clock();
 var sunPos = new THREE.Vector3(0, 0, 10);
 
 var ambientLight = new THREE.Vector4(0.1,0.1,0.1,1);
-var ambientMaterial = new THREE.Vector4(0.1,0.2,0.3,1);
-var diffuseLight = new THREE.Vector4(1,1,0,1);
-var diffuseMaterial = new THREE.Vector4(0.3,0.2,0.1,1);
+var ambientMaterial = new THREE.Vector4(222/255,184/255,135/255,1);
+var diffuseLight = new THREE.Vector4(0.9, 0.8, 0.3, 1.0);
+var diffuseMaterial = new THREE.Vector4(245/255,245/255,220/255,1);
 var fallof = new THREE.Vector3(0.01,0.01,0.01);
 var sealevel = 0.1;
+
+// Initialize statistics
+// https://github.com/mrdoob/stats.js
+var stats = new Stats();
+stats.setMode(0);
+stats.domElement.style.position = 'absolute';
+stats.domElement.style.left = '0px';
+stats.domElement.style.top = '0px';
+document.body.appendChild( stats.domElement );
 
 // Load shaders
 // https://github.com/codecruzer/webgl-shader-loader-js
@@ -48,10 +57,16 @@ SHADER_LOADER.load(
 		    fragmentShader: fShader
 		});
 
+		uniformsSun = {
+			diffuseLight: {type: "v4", value : diffuseLight},
+			lengthCamSun: {type: "f", value : camera.position.distanceTo(sunPos)}
+		}
+
 		var vShaderSun = data.shaderSun.vertex;
         var fShaderSun = data.shaderSun.fragment;
 
         sunShader = new THREE.ShaderMaterial({
+        	uniforms: 		uniformsSun,
 		    vertexShader:   vShaderSun,
 		    fragmentShader: fShaderSun
 		});
@@ -81,7 +96,7 @@ function initialize() {
 	// https://threejsdoc.appspot.com/doc/three.js/src.source/extras/controls/TrackballControls.js.html
 	controls = new THREE.TrackballControls( camera );
 	controls.target.set( 0, 0, 0 );
-	controls.minDistance = 1.25;
+	controls.minDistance = 5.0;
 	controls.maxDistance = 105;
 	controls.zoomSpeed = 0.05;
 	controls.rotateSpeed = 0.05;
@@ -92,17 +107,33 @@ function initialize() {
 
 
 function render() {
-	// Update uniforms
+	stats.begin();
+
+	// Update planet uniforms
 	var delta = clock.getDelta();
 	uniforms.time.value += delta;
 	uniforms.level.value = camera.position.length();
 
+	// Update sun uniforms
+	uniformsSun.lengthCamSun.value = camera.position.distanceTo(sunPos);
+
 	// Update world
 	planetMesh.rotation.y += delta * 0.08;
 	controls.update();
+	renderer.render( scene, camera );
+	stats.end();
+	//document.getElementById("value").innerHTML = camera.position.length() + "      " + camera.position.distanceTo(sunPos);
 
 	// Call render again
 	requestAnimationFrame( render );
-	renderer.render( scene, camera );
 };
+
+// Update window if resized
+$(window).resize(function( event ) {
+	renderer.setSize( window.innerWidth, window.innerHeight);
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+});
+
+
 

@@ -120,15 +120,19 @@ float snoise(vec3 v) {
 //-----------------------------------------------------------
 
 
-// Returns custom noise based on a position
+// Returns fractal noise based on a position
 // Altering this too much may complicate calculating the new normal later
 // Multiplying the noise levels with too large floats creates undesired results
 float noise (vec3 pos) {
-  float noise = (snoise(pos) * 0.5 + 0.5) * 0.01;
-  noise += (snoise(pos * 2.0) * 0.5 + 0.5) * 0.02;
-  noise += (snoise(pos * 4.0) * 0.5 + 0.5) * 0.01;
-  noise += (snoise(pos * 16.0) * 0.5 + 0.5) * 0.01;
-	
+  float divider = 0.05;
+  float noise = abs((snoise(pos) * 0.5 + 0.5) * divider);
+  noise += (snoise(pos * 2.0) * 0.5 + 0.5) * divider/2.0;
+  noise += (snoise(pos * 4.0) * 0.5 + 0.5) * divider/4.0;
+  noise += level < 40.0 ? ((snoise(pos * 8.0) * 0.5 + 0.5) * divider/4.0) : 0.0;
+  noise += level < 20.0 ? ((snoise(pos * 16.0) * 0.5 + 0.5) * divider/16.0) : 0.0;
+  noise += level < 14.0 ? ((snoise(pos * 32.0) * 0.5 + 0.5) * divider/32.0) : 0.0;
+  noise += level < 8.0 ? ((snoise(pos * 64.0) * 0.5 + 0.5) * divider/64.0) : 0.0;
+
   return noise;
 }
 
