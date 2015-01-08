@@ -1,10 +1,11 @@
 // Initialize THREE.js
 // https://github.com/mrdoob/three.js
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 0.1, 200 );
+var width = window.innerWidth - 200;
+var camera = new THREE.PerspectiveCamera( 30, width / window.innerHeight, 0.1, 200 );
 var renderer = new THREE.WebGLRenderer();
 
-renderer.setSize( window.innerWidth, window.innerHeight);
+renderer.setSize( width, window.innerHeight);
 document.body.appendChild( renderer.domElement );
 
 // Initialize global variables
@@ -15,7 +16,7 @@ var orbitGeometry = new THREE.TorusGeometry(10, 0.01, 16, 100);
 var clock = new THREE.Clock();
 var sunPos = new THREE.Vector3(0, 0, 10);
 
-var ambientLight = new THREE.Vector4(0.1,0.1,0.1,1);
+var placeholderColor = new THREE.Vector4(0,0,0,1);
 var ambientMaterial = new THREE.Vector4(222/255,184/255,135/255,1);
 var diffuseLight = new THREE.Vector4(0.9, 0.8, 0.3, 1.0);
 var diffuseMaterial = new THREE.Vector4(245/255,245/255,220/255,1);
@@ -31,19 +32,59 @@ stats.domElement.style.left = '0px';
 stats.domElement.style.top = '0px';
 document.body.appendChild( stats.domElement );
 
+// Initialize UI
+$("#atmosphereDensity").noUiSlider({
+    range: {
+        'min': 0,
+        '25%': 1,
+        '50%': 2,
+        '75%': 3,
+        'max': 4
+    },
+    snap: true,
+    start: 2
+});
+
+$("#sunIntensity").noUiSlider({
+    range: {
+        'min': 0,
+        '25%': 1,
+        '50%': 2,
+        '75%': 3,
+        'max': 4
+    },
+    snap: true,
+    start: 2
+});
+
+$("#waterLevel").noUiSlider({
+    range: {
+        'min': 0,
+        '25%': 1,
+        '50%': 2,
+        '75%': 3,
+        'max': 4
+    },
+    snap: true,
+    start: 2
+});
+
+$("#atmosphereDensity").Link('lower').to($("#atmosphereDensityValue"));
+$("#sunIntensity").Link('lower').to($("#sunIntensityValue"));
+$("#waterLevel").Link('lower').to($("#waterLevelValue"));
+
 // Load shaders
 // https://github.com/codecruzer/webgl-shader-loader-js
 SHADER_LOADER.load(
     function (data)
     {
     	uniforms = {
-		    time: { type: "f", value: 0 },//,
+		    time: { type: "f", value: 0 },
 		    level: { type: "f", value: 6},
 		    sunPos: {type: "v3", value: sunPos},
-		    ambientLight: {type: "v4", value: ambientLight},
 		    ambientMaterial: {type: "v4", value: ambientMaterial},
-		    diffuseLight: {type: "v4", value: diffuseLight},
-		    diffuseMaterial: {type: "v4", value: diffuseMaterial},
+		    diffuseLight: {type: "v4", value: placeholderColor},
+		    diffuseMaterial: {type: "v4", value: placeholderColor},
 		    fallof: {type: "v3", value: fallof},
 		    sealevel: {type: "f", value: sealevel}
 		};
@@ -58,7 +99,7 @@ SHADER_LOADER.load(
 		});
 
 		uniformsSun = {
-			diffuseLight: {type: "v4", value : diffuseLight},
+			diffuseLight: {type: "v4", value : placeholderColor},
 			lengthCamSun: {type: "f", value : camera.position.distanceTo(sunPos)}
 		}
 
@@ -94,7 +135,7 @@ function initialize() {
 
 	// Handle user controls
 	// https://threejsdoc.appspot.com/doc/three.js/src.source/extras/controls/TrackballControls.js.html
-	controls = new THREE.TrackballControls( camera );
+	controls = new THREE.TrackballControls( camera, renderer.domElement);
 	controls.target.set( 0, 0, 0 );
 	controls.minDistance = 5.0;
 	controls.maxDistance = 105;
@@ -108,14 +149,8 @@ function initialize() {
 
 function render() {
 	stats.begin();
-
-	// Update planet uniforms
 	var delta = clock.getDelta();
-	uniforms.time.value += delta;
-	uniforms.level.value = camera.position.length();
-
-	// Update sun uniforms
-	uniformsSun.lengthCamSun.value = camera.position.distanceTo(sunPos);
+	updateUniforms(delta);
 
 	// Update world
 	planetMesh.rotation.y += delta * 0.08;
@@ -128,12 +163,23 @@ function render() {
 	requestAnimationFrame( render );
 };
 
+function updateUniforms(delta) {
+	// Update planet uniforms
+	uniforms.time.value += delta;
+	uniforms.level.value = camera.position.length();
+	uniforms.sealevel.value = $("#waterLevel").val();
+	uniforms.diffuseMaterial.value = new THREE.Vector4($("#planetColorR").val(),$("#planetColorG").val(),$("#planetColorB").val(),1);;
+	uniforms.diffuseLight.value = new THREE.Vector4($("#sunColorR").val(),$("#sunColorG").val(),$("#sunColorB").val(),1);;
+
+	// Update sun uniforms
+	uniformsSun.lengthCamSun.value = camera.position.distanceTo(sunPos);
+	uniformsSun.diffuseLight.value = new THREE.Vector4($("#sunColorR").val(),$("#sunColorG").val(),$("#sunColorB").val(),1);
+}
+
 // Update window if resized
 $(window).resize(function( event ) {
-	renderer.setSize( window.innerWidth, window.innerHeight);
-	camera.aspect = window.innerWidth / window.innerHeight;
+	width = window.innerWidth - 200;
+	renderer.setSize( width, window.innerHeight);
+	camera.aspect = width / window.innerHeight;
 	camera.updateProjectionMatrix();
 });
-
-
-

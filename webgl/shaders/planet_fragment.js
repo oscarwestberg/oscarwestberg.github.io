@@ -9,7 +9,6 @@ varying mat4 modelM;
 uniform float time;
 uniform float level;
 uniform vec3 sunPos;
-uniform vec4 ambientLight;
 uniform vec4 ambientMaterial;
 uniform vec4 diffuseLight;
 uniform vec4 diffuseMaterial;
@@ -124,7 +123,7 @@ float snoise(vec3 v) {
 // Altering this too much may complicate calculating the new normal later
 // Multiplying the noise levels with too large floats creates undesired results
 float noise (vec3 pos) {
-  float divider = 0.05;
+  float divider = 0.06;
   float noise = abs((snoise(pos) * 0.5 + 0.5) * divider);
   noise += (snoise(pos * 2.0) * 0.5 + 0.5) * divider/2.0;
   noise += (snoise(pos * 4.0) * 0.5 + 0.5) * divider/4.0;
@@ -163,8 +162,9 @@ void main() {
   
   // Apply Blinn-Phong illumination model, currently without specular highlights
   float lambert = max(dot(L, normal), 0.0);
-	vec4 intensityDiffuse = diffuseLight * diffuseMaterial * lambert;
-	vec4 intensityAmbient = ambientLight * ambientMaterial;
+  vec4 ambientLight = vec4(0.1,0.1,0.1,1.0);
+	vec4 intensityDiffuse = diffuseLight * diffuseMaterial * lambert * smoothstep(-0.1, 0.0, dot(N,L));
+	vec4 intensityAmbient = ambientLight * diffuseMaterial;
 
 	gl_FragColor = intensityAmbient + intensityDiffuse;
 }

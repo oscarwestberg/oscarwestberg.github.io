@@ -3,14 +3,68 @@
   <head>
     <title>WebGL</title>
     <meta charset="utf-8"/>
+    <link href="../css/jquery.nouislider.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css" type="text/css">
-  </head>
-  <body>
-
-    <p id="value" ></p>
     <script src="../js/three.min.js"></script>
     <script src="../js/TrackballControls.js"></script>
     <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/jquery.nouislider.all.min.js"></script>
+  </head>
+  <body>
+
+    <div id="menu">
+      <h1>Procedural Planet Generation</h1>
+      
+      <h2>Planet</h2>
+
+      <p>Noise Type</p>
+      <select name="select">
+        <option value="value1">Value 1</option> 
+        <option value="value2" selected>Value 2</option>
+        <option value="value3">Value 3</option>
+      </select>
+      
+      <p>Noise Variation</p>
+      <input type="text" id="noiseVariation">
+
+      <p>Color RGB</p>
+      <input type="text" maxlength="5" size="5" value="0.6" id="planetColorR">
+      <input type="text" maxlength="5" size="5" value="0.4" id="planetColorG">
+      <input type="text" maxlength="5" size="5" value="0.2" id="planetColorB">
+
+      <p>Atmosphere Density</p>
+      <div id="atmosphereDensity"></div>
+      <p id="atmosphereDensityValue" style="color:gray"></p>
+
+      <p>Atmosphere Color RGB</p>
+      <input type="text" maxlength="5" size="5" value="0.6" id="atmosphereColorR">
+      <input type="text" maxlength="5" size="5" value="0.4" id="atmosphereColorG">
+      <input type="text" maxlength="5" size="5" value="0.2" id="atmosphereColorB">
+
+      <p>Water level</p>
+      <div id="waterLevel"></div>
+      <p id="waterLevelValue" style="color:gray"></p>
+
+      <h2>Sun</h2>
+
+      <p>Noise Type</p>
+      <select name="select">
+        <option value="value1">Value 1</option> 
+        <option value="value2" selected>Value 2</option>
+        <option value="value3">Value 3</option>
+      </select>
+
+      <p>Color RGB</p>
+      <input type="text" maxlength="5" size="5" value="1" id="sunColorR">
+      <input type="text" maxlength="5" size="5" value="0.765" id="sunColorG">
+      <input type="text" maxlength="5" size="5" value="0.302" id="sunColorB">
+      
+      <p>Intensity</p>
+      <div id="sunIntensity"></div>
+      <p id="sunIntensityValue" style="color:gray"></p>
+
+    </div>
+    
 
     <!-- Load shaders -->
     <script data-src="shaders/planet_fragment.js" data-name="shader" type="x-shader/x-fragment"></script>
