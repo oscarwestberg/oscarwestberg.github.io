@@ -9,14 +9,19 @@ varying mat4 modelM;
 uniform float time;
 uniform float level;
 uniform vec3 sunPos;
-uniform vec4 ambientMaterial;
 uniform vec4 diffuseLight;
 uniform vec4 diffuseMaterial;
 uniform vec3 fallof;
 uniform float sealevel;
+uniform float noiseIntensity;
+uniform float noiseType;
+uniform float noiseVariation;
+
+vec4 ambientLight = vec4(0.1,0.1,0.1,1.0);
 
 //-----------------------------------------------------------
 // WebGL noise. Src: https://github.com/ashima/webgl-noise
+// This specific version is from https://github.com/JcBernack/webgl-noise/blob/4e6d073a59d3af949d235ce22d27177597de1f30/src/noise3Dgrad.glsl
 //-----------------------------------------------------------
 
 //
@@ -39,14 +44,16 @@ vec4 mod289(vec4 x) {
 }
 
 vec4 permute(vec4 x) {
-  return mod289(((x*34.0)+1.0)*x);
+     return mod289(((x*34.0)+1.0)*x);
 }
 
-vec4 taylorInvSqrt(vec4 r) {
+vec4 taylorInvSqrt(vec4 r)
+{
   return 1.79284291400159 - 0.85373472095314 * r;
 }
 
-float snoise(vec3 v) { 
+float snoise(vec3 v, out vec3 gradient)
+{
   const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
   const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
 
@@ -61,8 +68,8 @@ float snoise(vec3 v) {
   vec3 i2 = max( g.xyz, l.zxy );
 
   vec3 x1 = x0 - i1 + C.xxx;
-  vec3 x2 = x0 - i2 + C.yyy;
-  vec3 x3 = x0 - D.yyy;
+  vec3 x2 = x0 - i2 + C.yyy; 
+  vec3 x3 = x0 - D.yyy;      
 
 // Permutations
   i = mod289(i); 
@@ -109,10 +116,18 @@ float snoise(vec3 v) {
 
 // Mix final noise value
   vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
-  m = m * m;
-  return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), 
-                                dot(p2,x2), dot(p3,x3) ) );
-  }
+  vec4 m2 = m * m;
+  vec4 m4 = m2 * m2;
+  vec4 pdotx = vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3));
+
+// Determine noise gradient
+  vec4 temp = m2 * m * pdotx;
+  gradient = -8.0 * (temp.x * x0 + temp.y * x1 + temp.z * x2 + temp.w * x3);
+  gradient += m4.x * p0 + m4.y * p1 + m4.z * p2 + m4.w * p3;
+  gradient *= 42.0;
+
+  return 42.0 * dot(m4, pdotx);
+}
 
 //-----------------------------------------------------------
 // End of WebGL noise. Src: https://github.com/ashima/webgl-noise
@@ -120,51 +135,91 @@ float snoise(vec3 v) {
 
 
 // Returns fractal noise based on a position
-// Altering this too much may complicate calculating the new normal later
-// Multiplying the noise levels with too large floats creates undesired results
-float noise (vec3 pos) {
-  float divider = 0.06;
-  float noise = abs((snoise(pos) * 0.5 + 0.5) * divider);
-  noise += (snoise(pos * 2.0) * 0.5 + 0.5) * divider/2.0;
-  noise += (snoise(pos * 4.0) * 0.5 + 0.5) * divider/4.0;
-  noise += level < 40.0 ? ((snoise(pos * 8.0) * 0.5 + 0.5) * divider/4.0) : 0.0;
-  noise += level < 20.0 ? ((snoise(pos * 16.0) * 0.5 + 0.5) * divider/16.0) : 0.0;
-  noise += level < 14.0 ? ((snoise(pos * 32.0) * 0.5 + 0.5) * divider/32.0) : 0.0;
-  noise += level < 8.0 ? ((snoise(pos * 64.0) * 0.5 + 0.5) * divider/64.0) : 0.0;
+// Also calculates gradient
+float noise1 (vec3 pos, out vec3 gradient) {
+  vec3 temp;
+
+  float noise = snoise(pos + noiseVariation, temp) * noiseIntensity;
+  gradient = temp * noiseIntensity;
+
+  noise += snoise(pos * 2.0 + noiseVariation, temp) * noiseIntensity/2.0;
+  gradient += temp * noiseIntensity/2.0;
+
+  noise += snoise(pos * 4.0 + noiseVariation, temp) * noiseIntensity/4.0;
+  gradient += temp * noiseIntensity/4.0;
+
+  noise += snoise(pos*8.0 + noiseVariation, temp) * noiseIntensity/8.0;
+  gradient += temp * noiseIntensity/8.0;
+
+  noise += snoise(pos*16.0 + noiseVariation, temp) * noiseIntensity/16.0;
+  gradient += temp * noiseIntensity/16.0;
+
+  noise += snoise(pos*32.0 + noiseVariation, temp) * noiseIntensity/4.0;
+  gradient += temp * noiseIntensity/4.0;
+
+  noise += snoise(pos*64.0 + noiseVariation, temp) * noiseIntensity/8.0;
+  gradient += temp * noiseIntensity/8.0;
 
   return noise;
 }
 
-// Returns a normal that uses 3D noise as a bump map
-vec3 calculateNewNormal(float F) {
-  // Step size for calculating normals with gradients
-  float E = 0.001;
+float noise2 (vec3 pos, out vec3 gradient) {
+  vec3 temp;
 
-  // calculate noise in all dimensions
-  float Fx = noise(vec3(pos.x + E, pos.yz));
-  float Fy = noise(vec3(pos.x, pos.y + E, pos.z));
-  float Fz = noise(vec3(pos.xy, pos.z + E));
+  float noise = snoise(pos, temp) * noiseIntensity;
+  gradient = temp * noiseIntensity;
 
-  // dF gradient vector
-  vec3 dF = vec3(Fx - F, Fy - F, Fz - F) / E;
-  vec3 newNormal = normalize(N - dF);
+  noise += snoise(pos * 2.0, temp) * noiseIntensity/2.0;
+  gradient += temp * noiseIntensity/2.0;
 
-  return newNormal;
+  noise += snoise(pos * 4.0, temp) * noiseIntensity/4.0;
+  gradient += temp * noiseIntensity/4.0;
+
+  return noise;
+}
+
+float noise3 (vec3 pos, out vec3 gradient) {
+  vec3 temp;
+
+  float noise = snoise(pos, temp) * noiseIntensity;
+  gradient = temp * noiseIntensity;
+
+  noise += snoise(pos * 64.0, temp) * noiseIntensity/4.0;
+  gradient += temp * noiseIntensity/4.0;
+
+  return noise;
+}
+
+// Calculate water, will be improved soon
+vec4 diffuseWater(vec3 L) {
+  vec4 intensityAmbient = ambientLight * diffuseMaterial;
+  float lambert = max(dot(L, N), 0.0);
+
+  return diffuseMaterial  * lambert + intensityAmbient * 0.6;
+}
+
+// Returns the color for the ground using the Blinn-Phong illumination model
+vec4 diffuseGround(vec3 gradient, vec3 L) {
+  vec4 intensityAmbient = ambientLight * diffuseMaterial;
+  vec3 normal = normalize(N - gradient);
+
+  // Apply Blinn-Phong illumination model, currently without specular highlights
+  float lambert = max(dot(L, normal), 0.0);
+  vec4 intensityDiffuse = diffuseLight * diffuseMaterial * lambert * smoothstep(-0.1, 0.0, dot(N,L));
+
+  return intensityDiffuse + intensityAmbient;
 }
 
 void main() {
   // Create light vector towards sun, compensate for geometry distortion such as rotation
   vec3 L = normalize( vec3( vec4(sunPos, 1.0) * modelM ) );
+  vec3 gradient;
+	float F;
 
-  // Calculate noise and new normal
-	float F = noise(pos);
-  vec3 normal = calculateNewNormal(F);
-  
-  // Apply Blinn-Phong illumination model, currently without specular highlights
-  float lambert = max(dot(L, normal), 0.0);
-  vec4 ambientLight = vec4(0.1,0.1,0.1,1.0);
-	vec4 intensityDiffuse = diffuseLight * diffuseMaterial * lambert * smoothstep(-0.1, 0.0, dot(N,L));
-	vec4 intensityAmbient = ambientLight * diffuseMaterial;
+  // Depending on user input, calculate noise using different functions
+  F = noiseType == 1.0 ? noise1(pos, gradient) : F;
+  F = noiseType == 2.0 ? noise2(pos, gradient) : F;
+  F = noiseType == 3.0 ? noise3(pos, gradient) : F;
 
-	gl_FragColor = intensityAmbient + intensityDiffuse;
+	gl_FragColor = sealevel > F ? diffuseWater(L) : diffuseGround(gradient, L);
 }

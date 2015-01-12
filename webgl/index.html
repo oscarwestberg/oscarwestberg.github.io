@@ -13,19 +13,24 @@
   <body>
 
     <div id="menu">
-      <h1>Procedural Planet Generation</h1>
+      <h3>Procedural Planet Generation</h3>
       
       <h2>Planet</h2>
 
       <p>Noise Type</p>
-      <select name="select">
-        <option value="value1">Value 1</option> 
-        <option value="value2" selected>Value 2</option>
-        <option value="value3">Value 3</option>
+      <select id="noiseType">
+        <option value="1" selected>Type 1</option> 
+        <option value="2">Type 2</option>
+        <option value="3">Type 3</option>
       </select>
       
+      <p>Noise Intensity</p>
+      <div id="noiseIntensity"></div>
+      <p id="noiseIntensityValue" style="color:gray"></p>
+
       <p>Noise Variation</p>
-      <input type="text" id="noiseVariation">
+      <div id="noiseVariation"></div>
+      <p id="noiseVariationValue" style="color:gray"></p>
 
       <p>Color RGB</p>
       <input type="text" maxlength="5" size="5" value="0.6" id="planetColorR">
@@ -71,6 +76,8 @@
     <script data-src="shaders/planet_vertex.js" data-name="shader" type="x-shader/x-vertex"></script>
     <script data-src="shaders/sun_fragment.js" data-name="shaderSun" type="x-shader/x-fragment"></script>
     <script data-src="shaders/sun_vertex.js" data-name="shaderSun" type="x-shader/x-vertex"></script>
+    <script data-src="shaders/atmosphere_fragment.js" data-name="shaderAtmosphere" type="x-shader/x-fragment"></script>
+    <script data-src="shaders/atmosphere_vertex.js" data-name="shaderAtmosphere" type="x-shader/x-vertex"></script>
 
     <script src="../js/ShaderLoader.min.js"></script> 
     <script src="../js/Stats.js"></script>    
