@@ -1,3 +1,6 @@
+
+
+
 // Initialize THREE.js
 var scene = new THREE.Scene();
 var width = window.innerWidth - 200;
@@ -12,10 +15,10 @@ document.body.appendChild( renderer.domElement );
 // Initialize global variables
 // Geometries
 var radius = 100;
-var planetGeometry = new THREE.SphereGeometry( radius, 50, 50);
+var planetGeometry = new THREE.SphereGeometry( radius, 70, 70);
 var sunGeometry = new THREE.SphereGeometry( radius, 40, 40);
 var atmosphereGeometry = new THREE.SphereGeometry(radius*1.025, 100, 100);
-var atmosphereGroundGeometry = new THREE.SphereGeometry(radius*1.01, 30, 30);
+var atmosphereGroundGeometry = new THREE.SphereGeometry(radius*1.01, 100, 100);
 
 var sunColor = new THREE.Vector4(1,0.765,0.302,1);
 var clock = new THREE.Clock();
@@ -60,7 +63,7 @@ SHADER_LOADER.load(
 		    noiseType: {type: "f", value: 1},
 		    noiseVariation: {type: "f", value: 0},
 		    waterColor: {type: "v3", value: placeholderColor},
-		    renderLevels: {type: "fv1", value: [6000.0, 6000.0, 6000.0, 3000.0, 1400.0, 650.0, 450.0, 300.0]},
+		    renderLevels: {type: "fv1", value: [6000.0, 6000.0, 6000.0, 5000.0, 1800.0, 950.0, 850.0, 500.0, 500, 500]},
 		    shoreColor: {type: "v3", value: placeholderColor}
 		};
 
@@ -162,7 +165,7 @@ function initialize() {
 	controls.target.set( 0, 0, 0 );
 	controls.minDistance = 200.0;
 	controls.maxDistance = 5000;
-	controls.zoomSpeed = 0.05;
+	controls.zoomSpeed = 0.1;
 	controls.rotateSpeed = 0.05;
 	controls.noPan = true;
 
