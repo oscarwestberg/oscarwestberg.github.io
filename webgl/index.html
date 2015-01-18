@@ -9,13 +9,12 @@
     <script src="../js/TrackballControls.js"></script>
     <script src="../js/jquery-1.11.1.min.js"></script>
     <script src="../js/jquery.nouislider.all.min.js"></script>
+    <script type="text/javascript" src="../js/jscolor/jscolor.js"></script>
   </head>
   <body>
 
     <div id="menu">
-      <h3>Procedural Planet Generation</h3>
-      
-      <h2>Planet</h2>
+      <h1>Procedural Planet Generation</h1>
 
       <p>Noise Type</p>
       <select id="noiseType">
@@ -32,44 +31,32 @@
       <div id="noiseVariation"></div>
       <p id="noiseVariationValue" style="color:gray"></p>
 
-      <p>Color RGB</p>
-      <input type="text" maxlength="5" size="5" value="0.6" id="planetColorR">
-      <input type="text" maxlength="5" size="5" value="0.4" id="planetColorG">
-      <input type="text" maxlength="5" size="5" value="0.2" id="planetColorB">
+      <p>Land color</p>
+      <input class="color" id="landColor" value="669501">
+      
+      <p>Shore color</p> 
+       <input class="color" id="shoreColor" value="977342">
 
-      <p>Atmosphere Density</p>
-      <div id="atmosphereDensity"></div>
-      <p id="atmosphereDensityValue" style="color:gray"></p>
+      <br>
+      <input type="checkbox" id="renderAtmosphere"><p style="display:inline-block; padding-left:5px;">Render atmosphere</p>
 
-      <p>Atmosphere Color RGB</p>
-      <input type="text" maxlength="5" size="5" value="0.6" id="atmosphereColorR">
-      <input type="text" maxlength="5" size="5" value="0.4" id="atmosphereColorG">
-      <input type="text" maxlength="5" size="5" value="0.2" id="atmosphereColorB">
+      <p>Atmosphere Color</p>
+      <select id="atmosphereColor">
+        <option value="Blue">Blue</option> 
+        <option value="Pink">Pink</option>
+        <option value="Green">Green</option>
+        <option value="Orange" selected>Orange</option>
+        <option value="White">White</option>
+      </select>
 
       <p>Water level</p>
       <div id="waterLevel"></div>
       <p id="waterLevelValue" style="color:gray"></p>
 
-      <h2>Sun</h2>
-
-      <p>Noise Type</p>
-      <select name="select">
-        <option value="value1">Value 1</option> 
-        <option value="value2" selected>Value 2</option>
-        <option value="value3">Value 3</option>
-      </select>
-
-      <p>Color RGB</p>
-      <input type="text" maxlength="5" size="5" value="1" id="sunColorR">
-      <input type="text" maxlength="5" size="5" value="0.765" id="sunColorG">
-      <input type="text" maxlength="5" size="5" value="0.302" id="sunColorB">
-      
-      <p>Intensity</p>
-      <div id="sunIntensity"></div>
-      <p id="sunIntensityValue" style="color:gray"></p>
-
+      <footer>
+        <p>Oscar Westberg</p>
+      </footer>
     </div>
-    
 
     <!-- Load shaders -->
     <script data-src="shaders/planet_fragment.js" data-name="shader" type="x-shader/x-fragment"></script>
@@ -78,9 +65,10 @@
     <script data-src="shaders/sun_vertex.js" data-name="shaderSun" type="x-shader/x-vertex"></script>
     <script data-src="shaders/atmosphere_fragment.js" data-name="shaderAtmosphere" type="x-shader/x-fragment"></script>
     <script data-src="shaders/atmosphere_vertex.js" data-name="shaderAtmosphere" type="x-shader/x-vertex"></script>
+    <script data-src="shaders/atmosphere_ground_fragment.js" data-name="shaderAtmosphereGround" type="x-shader/x-fragment"></script>
+    <script data-src="shaders/atmosphere_ground_vertex.js" data-name="shaderAtmosphereGround" type="x-shader/x-vertex"></script>
 
-    <script src="../js/ShaderLoader.min.js"></script> 
-    <script src="../js/Stats.js"></script>    
+    <script src="../js/ShaderLoader.min.js"></script>  
     <script src="canvas.js"></script>
     
   </body>

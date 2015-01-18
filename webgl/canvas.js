@@ -1,123 +1,111 @@
 // Initialize THREE.js
-// https://github.com/mrdoob/three.js
 var scene = new THREE.Scene();
 var width = window.innerWidth - 200;
-var camera = new THREE.PerspectiveCamera( 30, width / window.innerHeight, 0.1, 200 );
+var camera = new THREE.PerspectiveCamera( 30, width / window.innerHeight, 0.1, 20000 );
 var renderer = new THREE.WebGLRenderer({
-	antialias: false
+	antialias: true
 });
 
 renderer.setSize( width, window.innerHeight);
 document.body.appendChild( renderer.domElement );
 
 // Initialize global variables
-var planetGeometry = new THREE.SphereGeometry( 1, 60, 60);
-var sunGeometry = new THREE.SphereGeometry( 1, 40, 40);
-var atmosphereGeometry = new THREE.SphereGeometry( 1.1, 60, 60);
+// Geometries
+var radius = 100;
+var planetGeometry = new THREE.SphereGeometry( radius, 50, 50);
+var sunGeometry = new THREE.SphereGeometry( radius, 40, 40);
+var atmosphereGeometry = new THREE.SphereGeometry(radius*1.025, 100, 100);
+var atmosphereGroundGeometry = new THREE.SphereGeometry(radius*1.01, 30, 30);
 
+var sunColor = new THREE.Vector4(1,0.765,0.302,1);
 var clock = new THREE.Clock();
-var sunPos = new THREE.Vector3(0, 0, 40);
-
+var sunPos = new THREE.Vector3(0, 0, 4000);
 var placeholderColor = new THREE.Vector4(0,0,0,1);
-var fallof = new THREE.Vector3(0.01,0.01,0.01);
 
-// Initialize statistics
-// https://github.com/mrdoob/stats.js
-var stats = new Stats();
-stats.setMode(0);
-stats.domElement.style.position = 'absolute';
-stats.domElement.style.left = '0px';
-stats.domElement.style.top = '0px';
-document.body.appendChild( stats.domElement );
+// Atmsphere variable used in the atmosphere shader
+var atmosphere = {
+	Kr: 0.0025,
+	Km: 0.0010,
+	ESun: 20.0,
+	g: -0.950,
+	innerRadius: 100,
+	outerRadius: 102.5,
+	wavelength: [0.650, 0.570, 0.475],
+	scaleDepth: 0.25,
+	mieScaleDepth: 0.1
+};
 
-// Initialize UI
-$("#atmosphereDensity").noUiSlider({
-    range: {
-        'min': 0,
-        '25%': 1,
-        '50%': 2,
-        '75%': 3,
-        'max': 4
-    },
-    snap: true,
-    start: 2
-});
+// Initialize UI sliders
+$("#noiseIntensity").noUiSlider({ range: { 'min': 1, 'max': 100 }, snap: false, start: 50 });
+$("#noiseVariation").noUiSlider({ range: { 'min': 1, 'max': 100 }, snap: false, start: 50 });
+$("#waterLevel").noUiSlider({ range: { 'min': -25, 'max': 25 }, snap: false, start: 2.20 });
 
-// 0.01 - 0.1
-$("#noiseIntensity").noUiSlider({
-    range: {
-        'min': 1,
-        'max': 100
-    },
-    snap: false,
-    start: 50
-});
-
-$("#noiseVariation").noUiSlider({
-    range: {
-        'min': 1,
-        'max': 100
-    },
-    snap: false,
-    start: 50
-});
-
-$("#sunIntensity").noUiSlider({
-    range: {
-        'min': 0,
-        '25%': 1,
-        '50%': 2,
-        '75%': 3,
-        'max': 4
-    },
-    snap: true,
-    start: 2
-});
-
-$("#waterLevel").noUiSlider({
-    range: {
-        'min': -20,
-        'max': 20
-    },
-    snap: false,
-    start: -20
-});
-
-$("#atmosphereDensity").Link('lower').to($("#atmosphereDensityValue"));
-$("#sunIntensity").Link('lower').to($("#sunIntensityValue"));
 $("#waterLevel").Link('lower').to($("#waterLevelValue"));
 $("#noiseIntensity").Link('lower').to($("#noiseIntensityValue"));
 $("#noiseVariation").Link('lower').to($("#noiseVariationValue"));
 
 // Load shaders
-// https://github.com/codecruzer/webgl-shader-loader-js
 SHADER_LOADER.load(
     function (data)
     {
+    	// Initialize uniforms to send to the shaders
     	planetUniforms = {
 		    time: { type: "f", value: 0 },
 		    level: { type: "f", value: camera.position.length()},
 		    sunPos: {type: "v3", value: sunPos},
-		    diffuseLight: {type: "v4", value: placeholderColor},
+		    diffuseLight: {type: "v4", value: sunColor},
 		    diffuseMaterial: {type: "v4", value: placeholderColor},
-		    fallof: {type: "v3", value: fallof},
 		    sealevel: {type: "f", value: 0},
 		    noiseIntensity: {type: "f", value: 0},
 		    noiseType: {type: "f", value: 1},
 		    noiseVariation: {type: "f", value: 0},
+		    waterColor: {type: "v3", value: placeholderColor},
+		    renderLevels: {type: "fv1", value: [6000.0, 6000.0, 6000.0, 3000.0, 1400.0, 650.0, 450.0, 300.0]},
+		    shoreColor: {type: "v3", value: placeholderColor}
 		};
 
 		sunUniforms = {
-			diffuseLight: {type: "v4", value : placeholderColor}
+			diffuseLight: {type: "v4", value : sunColor}
 		}
 
+		// Used for the atmosphere shader
+		atmosphereUniforms = {
+			v3LightPosition: {type: "v3",value: new THREE.Vector3(0,0,1)},
+			v3InvWavelength: {type: "v3",value: new THREE.Vector3(1 / Math.pow(atmosphere.wavelength[0], 4), 1 / Math.pow(atmosphere.wavelength[1], 4), 1 / Math.pow(atmosphere.wavelength[2], 4))},
+			fCameraHeight: {type: "f",value: 0},
+			fCameraHeight2: {type: "f",value: 0},
+			fInnerRadius: {type: "f",value: atmosphere.innerRadius},
+			fInnerRadius2: {type: "f",value: atmosphere.innerRadius * atmosphere.innerRadius},
+			fOuterRadius: {type: "f",value: atmosphere.outerRadius},
+			fOuterRadius2: {type: "f",value: atmosphere.outerRadius * atmosphere.outerRadius},
+			fKrESun: {type: "f",value: atmosphere.Kr * atmosphere.ESun},
+			fKmESun: {type: "f",value: atmosphere.Km * atmosphere.ESun},
+			fKr4PI: {type: "f",value: atmosphere.Kr * 4.0 * Math.PI},
+			fKm4PI: {type: "f",value: atmosphere.Km * 4.0 * Math.PI},
+			fScale: {type: "f",value: 1 / (atmosphere.outerRadius - atmosphere.innerRadius)},
+			fScaleDepth: {type: "f",value: atmosphere.scaleDepth},
+			fScaleOverScaleDepth: {type: "f",value: 1 / (atmosphere.outerRadius - atmosphere.innerRadius) / atmosphere.scaleDepth},
+			g: {type: "f",value: atmosphere.g},
+			g2: {type: "f",value: atmosphere.g * atmosphere.g},
+			nSamples: {type: "i",value: 3},
+			fSamples: {type: "f",value: 3.0},
+			atmosphereColor: {type: "v3",value: placeholderColor},
+			tDisplacement: {type: "t",value: 0},
+			tSkyboxDiffuse: {type: "t",value: 0},
+			fNightScale: {type: "f",value: 1}
+		};
+
+		// Load shaders using Shader Loader JS
         var vShader = data.shader.vertex;
         var fShader = data.shader.fragment;
         var vShaderSun = data.shaderSun.vertex;
         var fShaderSun = data.shaderSun.fragment;
         var vShaderAtmosphere = data.shaderAtmosphere.vertex;
         var fShaderAtmosphere = data.shaderAtmosphere.fragment;
+        var vShaderAtmosphereGround = data.shaderAtmosphereGround.vertex;
+        var fShaderAtmosphereGround = data.shaderAtmosphereGround.fragment;
 
+        // Create shader materials
         planetShader = new THREE.ShaderMaterial({
         	uniforms: 		planetUniforms,
 		    vertexShader:   vShader,
@@ -130,80 +118,128 @@ SHADER_LOADER.load(
 		    fragmentShader: fShaderSun
 		});
 
+        // The atmosphere outside the planet
 		atmosphereShader = new THREE.ShaderMaterial({
+			uniforms: 		atmosphereUniforms,
 			vertexShader: 	vShaderAtmosphere, 
 			fragmentShader: fShaderAtmosphere,
 			transparent: 	true,
 			side: 			THREE.BackSide
 		});
 
+		// The atmosphere on the planet
+		atmosphereGroundShader = new THREE.ShaderMaterial({
+			uniforms: 		atmosphereUniforms,
+			vertexShader: 	vShaderAtmosphereGround, 
+			fragmentShader: fShaderAtmosphereGround,
+			transparent: 	true,
+		});
+
 		initialize();
     }
 );
 
+// Let's get this party started
 function initialize() {
-	// Load mesh
+	// Create meshes
 	planetMesh = new THREE.Mesh(planetGeometry, planetShader);
 	sunMesh = new THREE.Mesh(sunGeometry, sunShader);
 	atmosphereMesh = new THREE.Mesh(atmosphereGeometry, atmosphereShader);
+	atmosphereGroundMesh = new THREE.Mesh(atmosphereGroundGeometry, atmosphereGroundShader);
 
 	// Add meshes
 	scene.add( planetMesh );
 	scene.add( sunMesh );
 	scene.add( atmosphereMesh );
+	scene.add( atmosphereGroundMesh );
 
 	// Alter meshes 
 	sunMesh.scale.set(3,3,3);
 	sunMesh.position.set(sunPos.x,sunPos.y,sunPos.z);
 
 	// Handle user controls
-	// https://threejsdoc.appspot.com/doc/three.js/src.source/extras/controls/TrackballControls.js.html
 	controls = new THREE.TrackballControls( camera, renderer.domElement);
 	controls.target.set( 0, 0, 0 );
-	controls.minDistance = 5.0;
-	controls.maxDistance = 105;
+	controls.minDistance = 200.0;
+	controls.maxDistance = 5000;
 	controls.zoomSpeed = 0.05;
 	controls.rotateSpeed = 0.05;
 	controls.noPan = true;
 
-	camera.position.z = 6;
-	camera.position.x = -2;
+	camera.position = new THREE.Vector3(atmosphere.innerRadius*6,atmosphere.innerRadius,atmosphere.innerRadius*2);
 
 	render();
 };
 
-
+// Rendering function, runs (hopefully) many times every frame
 function render() {
-	stats.begin();
-
+	// Update uniforms
 	var delta = clock.getDelta();
 	updateUniforms(delta);
 
 	// Update world
-	planetMesh.rotation.y += delta * 0.08;
+	planetMesh.rotation.y += 0.001;
 	controls.update();
 
-	renderer.render( scene, camera );
-	stats.end();
+	if($('#renderAtmosphere').prop('checked')) {
+		atmosphereMesh.visible = true;
+		atmosphereGroundMesh.visible = true;
+	} else {
+		atmosphereMesh.visible = false;
+		atmosphereGroundMesh.visible = false;
+	}
 
+	renderer.render( scene, camera );
+	
 	// Call render again
 	requestAnimationFrame( render );
 };
 
 function updateUniforms(delta) {
+	var atmosphereColor; 
+	var color = $("#atmosphereColor").val();
+	var waterColor = new THREE.Vector3(0,0,0.8);
+
+	// Handle atmosphere color
+	switch(color) {
+		case "Blue":
+			atmosphereColor = new THREE.Vector3(0.92,0.57,0.475);
+			waterColor = new THREE.Vector3(50/255,50/255,160/255);
+			break;
+		case "Pink":
+			atmosphereColor = new THREE.Vector3(0.42,0.97,0.375);
+			waterColor = new THREE.Vector3(0.7,0.2,0.4);
+			break;
+		case "Green":
+			atmosphereColor = new THREE.Vector3(0.72,0.37,0.575);
+			waterColor = new THREE.Vector3(0.2,0.7,0.3);
+			break;
+		case "Orange":
+			atmosphereColor = new THREE.Vector3(0.36,0.524,0.79);
+			waterColor = new THREE.Vector3(0.7,0.3,0.3);
+			break;
+		case "White":
+			atmosphereColor = new THREE.Vector3(0.8,0.54,0.45);
+			waterColor = new THREE.Vector3(0.4,0.4,0.8);
+			break;
+	}
+
 	// Update planet uniforms
 	planetUniforms.time.value += delta;
-	planetUniforms.level.value = camera.position.length();
+	planetUniforms.level.value = camera.position.distanceTo(new THREE.Vector3(0,0,0));
 	planetUniforms.sealevel.value = $("#waterLevel").val()/120;
-	planetUniforms.diffuseMaterial.value = new THREE.Vector4($("#planetColorR").val(),$("#planetColorG").val(),$("#planetColorB").val(),1);
-	planetUniforms.diffuseLight.value = new THREE.Vector4($("#sunColorR").val(),$("#sunColorG").val(),$("#sunColorB").val(),1);
 	planetUniforms.noiseIntensity.value = $("#noiseIntensity").val()/1000;
 	planetUniforms.noiseType.value = $("#noiseType").val();
-	planetUniforms.noiseVariation.value = $("#noiseVariation").val()/100;
+	planetUniforms.noiseVariation.value = $("#noiseVariation").val()/70;
+	planetUniforms.waterColor.value = waterColor;
+	planetUniforms.shoreColor.value = new THREE.Vector3(document.getElementById('shoreColor').color.rgb[0],document.getElementById('shoreColor').color.rgb[1],document.getElementById('shoreColor').color.rgb[2]);
+	planetUniforms.diffuseMaterial.value = new THREE.Vector4(document.getElementById('landColor').color.rgb[0],document.getElementById('landColor').color.rgb[1],document.getElementById('landColor').color.rgb[2],1);
 
-	// Update sun uniforms
-	//sunUniforms.lengthCamSun.value = camera.position.distanceTo(sunPos);
-	sunUniforms.diffuseLight.value = new THREE.Vector4($("#sunColorR").val(),$("#sunColorG").val(),$("#sunColorB").val(),1);
+	// Atmosphere
+	var cameraHeight = camera.position.length();
+	atmosphereUniforms.fCameraHeight.value = cameraHeight;
+	atmosphereUniforms.fCameraHeight2.value = cameraHeight * cameraHeight;
+	atmosphereUniforms.v3InvWavelength.value = new THREE.Vector3(1 / Math.pow(atmosphereColor.x,4),1 / Math.pow(atmosphereColor.y,4),1 / Math.pow(atmosphereColor.z,4));
 }
 
 // Update window if resized

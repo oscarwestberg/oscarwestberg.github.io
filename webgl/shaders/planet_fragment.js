@@ -1,9 +1,8 @@
-// Vertex normal
+// Variables passed on by the vertex shader
 varying vec3 N;
-// Current position on model
 varying vec3 pos;
-// The matrix acting on the planet geometry
 varying mat4 modelM;
+varying vec3 cameraPos;
 
 // Variables from the JavaScript file
 uniform float time;
@@ -11,13 +10,17 @@ uniform float level;
 uniform vec3 sunPos;
 uniform vec4 diffuseLight;
 uniform vec4 diffuseMaterial;
-uniform vec3 fallof;
 uniform float sealevel;
 uniform float noiseIntensity;
 uniform float noiseType;
 uniform float noiseVariation;
+uniform vec3 waterColor;
+uniform float renderLevels[8];
+uniform vec3 shoreColor;
 
+// Global variables
 vec4 ambientLight = vec4(0.1,0.1,0.1,1.0);
+float F;
 
 //-----------------------------------------------------------
 // WebGL noise. Src: https://github.com/ashima/webgl-noise
@@ -134,92 +137,122 @@ float snoise(vec3 v, out vec3 gradient)
 //-----------------------------------------------------------
 
 
-// Returns fractal noise based on a position
-// Also calculates gradient
+// Returns fractal noise based on a position and gradient
 float noise1 (vec3 pos, out vec3 gradient) {
+  // Multiplier compensates for sphere size
+  float multiplier = 0.02;
   vec3 temp;
+  const int levels = 6;
 
-  float noise = snoise(pos + noiseVariation, temp) * noiseIntensity;
-  gradient = temp * noiseIntensity;
+  float noise = snoise(pos * multiplier * 0.6 + noiseVariation, temp) * noiseIntensity * 1.5;
+  gradient = temp * noiseIntensity * 1.5;
 
-  noise += snoise(pos * 2.0 + noiseVariation, temp) * noiseIntensity/2.0;
-  gradient += temp * noiseIntensity/2.0;
+  for(int i = 2; i <= levels; i++) {
+    // divider ensures more and more detailed noise levels
+    float divider = pow(2.0, float(i));
+    // How much every level of noise contributes to the final value
+    float contribution = pow(1.4, float(i));
 
-  noise += snoise(pos * 4.0 + noiseVariation, temp) * noiseIntensity/4.0;
-  gradient += temp * noiseIntensity/4.0;
-
-  noise += snoise(pos*8.0 + noiseVariation, temp) * noiseIntensity/8.0;
-  gradient += temp * noiseIntensity/8.0;
-
-  noise += snoise(pos*16.0 + noiseVariation, temp) * noiseIntensity/16.0;
-  gradient += temp * noiseIntensity/16.0;
-
-  noise += snoise(pos*32.0 + noiseVariation, temp) * noiseIntensity/4.0;
-  gradient += temp * noiseIntensity/4.0;
-
-  noise += snoise(pos*64.0 + noiseVariation, temp) * noiseIntensity/8.0;
-  gradient += temp * noiseIntensity/8.0;
+    // Only render if the camera is close enough
+    noise += level < renderLevels[i] ? snoise(pos * divider * multiplier + noiseVariation, temp) * noiseIntensity / contribution : 0.0;
+    gradient += level < renderLevels[i] ? temp * noiseIntensity / contribution : vec3(0.0,0.0,0.0);
+  }
 
   return noise;
 }
 
+// Returns fractal noise without big continents
 float noise2 (vec3 pos, out vec3 gradient) {
+  float multiplier = 0.02, noise = 0.0;
   vec3 temp;
+  const int levels = 6;
+  gradient = vec3(0.0,0.0,0.0);
 
-  float noise = snoise(pos, temp) * noiseIntensity;
-  gradient = temp * noiseIntensity;
+  for(int i = 0; i <= levels; i++) {
+    float divider = pow(2.0, float(i));
+    float contribution = pow(1.05, float(i));
 
-  noise += snoise(pos * 2.0, temp) * noiseIntensity/2.0;
-  gradient += temp * noiseIntensity/2.0;
-
-  noise += snoise(pos * 4.0, temp) * noiseIntensity/4.0;
-  gradient += temp * noiseIntensity/4.0;
+    noise += level < renderLevels[i] ? max(snoise(pos * divider * multiplier + noiseVariation, temp),0.0) * noiseIntensity / contribution : 0.0;
+    gradient += level < renderLevels[i] ? temp * noiseIntensity / contribution : vec3(0.0,0.0,0.0);
+  }
 
   return noise;
 }
 
 float noise3 (vec3 pos, out vec3 gradient) {
+  float multiplier = 0.02, noise = 0.0;
   vec3 temp;
+  const int levels = 6;
+  gradient = vec3(0.0,0.0,0.0);
 
-  float noise = snoise(pos, temp) * noiseIntensity;
-  gradient = temp * noiseIntensity;
+  for(int i = 0; i <= levels; i++) {
+    float divider = pow(2.0, float(i));
+    float contribution = pow(1.05, float(i));
 
-  noise += snoise(pos * 64.0, temp) * noiseIntensity/4.0;
-  gradient += temp * noiseIntensity/4.0;
+    float tempNoise = max(snoise(pos * divider * multiplier + noiseVariation, temp),0.0) * 0.5 / contribution;
+    tempNoise = tempNoise > 0.01 ? 0.0 : tempNoise;
+    temp = tempNoise > 0.01 ? vec3(0.0,0.0,0.0) : temp;
+
+    noise += level < renderLevels[i] ?  tempNoise : 0.0;
+    gradient += level < renderLevels[i] ? temp * noiseIntensity / contribution : vec3(0.0,0.0,0.0);
+  }
 
   return noise;
 }
 
-// Calculate water, will be improved soon
-vec4 diffuseWater(vec3 L) {
-  vec4 intensityAmbient = ambientLight * diffuseMaterial;
-  float lambert = max(dot(L, N), 0.0);
+// Calculate water color using the Blinn-Phong shading model
+vec4 colorWater(vec3 L) {
+  vec4 diffuseColor = vec4(5.0/266.0, 82.0/255.0, 199.0/255.0, 1.0) * (2.0/3.0) + vec4(waterColor, 1.0) * (1.0/3.0);
+  vec4 ambientColor = ambientLight * diffuseColor;
+  vec4 specularColor = vec4(1.0,1.0,1.0,1.0);
 
-  return diffuseMaterial  * lambert + intensityAmbient * 0.6;
+  // Calculate new normal for waves on the water
+  vec3 gradient = vec3(0.0,0.0,0.0);
+  float Fw = snoise(pos + time * 0.2, gradient);
+  // Only render waves if the camera is close enough
+  vec3 normal = level < 850.0 ? normalize(N - gradient * 0.02) : N;
+
+  // Diffuse lighting
+  float lambert = max(dot(L, normal), 0.0);
+
+  // Specular lighting
+  vec3 viewDirection = vec3(vec4(normalize(cameraPos - pos), 1.0) * modelM);
+  vec3 halfDir = normalize(viewDirection + L);
+  float specularAngle = max(dot(halfDir, normal), 0.0);
+  float specular = pow(specularAngle, 16.0);
+
+  // Blend shoreColor with the water's color for shallow waters
+  float contribution = smoothstep(sealevel - 0.02, sealevel, F);
+  diffuseColor = level < renderLevels[3] ? (1.0 - contribution) * diffuseColor +  contribution * vec4(shoreColor,1.0) : diffuseColor;
+
+  return ambientColor + lambert * diffuseColor + specular * specularColor * 0.35;
 }
 
-// Returns the color for the ground using the Blinn-Phong illumination model
-vec4 diffuseGround(vec3 gradient, vec3 L) {
-  vec4 intensityAmbient = ambientLight * diffuseMaterial;
+// Calculate ground color
+vec4 colorGround(vec3 gradient, vec3 L) {
   vec3 normal = normalize(N - gradient);
 
-  // Apply Blinn-Phong illumination model, currently without specular highlights
-  float lambert = max(dot(L, normal), 0.0);
-  vec4 intensityDiffuse = diffuseLight * diffuseMaterial * lambert * smoothstep(-0.1, 0.0, dot(N,L));
+  // Smooth transition from shore color to ground color
+  float contribution = smoothstep(sealevel, sealevel + 0.05, F);
+  vec4 diffuseColor =  contribution * diffuseMaterial + (1.0 - contribution) * vec4(shoreColor,1.0);
 
-  return intensityDiffuse + intensityAmbient;
+  // Apply Lambertian reflectance
+  float lambert = max(dot(L, normal), 0.0);
+  vec4 intensityDiffuse = diffuseLight * diffuseColor * lambert * smoothstep(-0.1, 0.0, dot(N,L));
+
+  return intensityDiffuse + ambientLight * diffuseMaterial;
 }
 
 void main() {
   // Create light vector towards sun, compensate for geometry distortion such as rotation
   vec3 L = normalize( vec3( vec4(sunPos, 1.0) * modelM ) );
   vec3 gradient;
-	float F;
 
   // Depending on user input, calculate noise using different functions
   F = noiseType == 1.0 ? noise1(pos, gradient) : F;
   F = noiseType == 2.0 ? noise2(pos, gradient) : F;
   F = noiseType == 3.0 ? noise3(pos, gradient) : F;
 
-	gl_FragColor = sealevel > F ? diffuseWater(L) : diffuseGround(gradient, L);
+  // If the noise level is below the sea level, render water. Otherwise render ground.
+	gl_FragColor = sealevel > F ? colorWater(L) : colorGround(gradient, L);
 }

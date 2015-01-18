@@ -28,16 +28,17 @@ body {
 }
 
 h1 {
-	padding-top: 50px;
-}
-
-h2 {
-	padding-top: 20px;
+	padding-top: 10px;
 }
 
 p {
 	font-size: 10pt;
 	padding-top: 12px;
+}
+
+footer {
+	position: fixed;
+	bottom: 10px;
 }
 
 canvas {
