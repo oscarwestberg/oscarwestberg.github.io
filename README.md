@@ -9,3 +9,4 @@ Displays work, projects, artwork and contact information.
 * [Trackball Controls](https://github.com/mrdoob/three.js/blob/master/examples/js/controls/TrackballControls.js)
 * [noUiSlider](http://refreshless.com/nouislider/)
 * [jscolor](http://jscolor.com)
+* [Masonry](http://masonry.desandro.com)

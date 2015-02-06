@@ -11,15 +11,12 @@ uniform vec3 sunPos;
 uniform vec4 diffuseLight;
 uniform vec4 diffuseMaterial;
 uniform float sealevel;
-uniform float noiseIntensity;
+uniform float noiseIntensity; // How flat or steep the noise is
 uniform float noiseType;
 uniform float noiseVariation;
 uniform vec3 waterColor;
 uniform float renderLevels[8];
 uniform vec3 shoreColor;
-  // noiseVariation - user input, changes current position and thus alters noise
-  // pos - current position
-  // noiseIntensity - user input, how flat or steep the noise is
 
 // Global variables
 vec4 ambientLight = vec4(0.1,0.1,0.1,1.0);
@@ -182,7 +179,7 @@ float noise2 (vec3 pos, out vec3 gradient) {
     float divider = pow(2.0, float(i)) * 0.01; // Used for fractal noise, 0.01 compensates for large sphere size
     float contribution = pow(1.4, float(i)); // How much every level of noise contributes to the final value
 
-    noise += level < renderLevels[i-3] ? abs(snoise(pos * size * divider  + noiseVariation, temp) * _noiseIntensity) / (contribution * noiseDec) - decrease : -decrease;
+    noise += level < renderLevels[i-3] ? abs(snoise(pos * size * divider + noiseVariation, temp) * _noiseIntensity) / (contribution * noiseDec) - decrease : -decrease;
     gradient += level < renderLevels[i-3] ? temp * _noiseIntensity / contribution : vec3(0.0,0.0,0.0);
   }
 
@@ -242,7 +239,7 @@ vec4 colorWater(vec3 L) {
   vec3 gradient = vec3(0.0,0.0,0.0);
   float Fw = snoise(pos + time * 0.2, gradient);
   // Only render waves if the camera is close enough
-  vec3 normal = level < renderLevels[4]*0.85 ? normalize(N - gradient * 0.02) : N;
+  vec3 normal = level < renderLevels[4]*0.7 ? normalize(N - gradient * 0.02) : N;
 
   // Diffuse lighting
   float lambert = max(dot(L, normal), 0.0);

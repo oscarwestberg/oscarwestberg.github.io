@@ -1,5 +1,6 @@
-
-
+// Noise type
+// Clouds
+// sun?
 
 // Initialize THREE.js
 var scene = new THREE.Scene();
@@ -206,8 +207,8 @@ function updateUniforms(delta) {
 	// Handle atmosphere color
 	switch(color) {
 		case "Blue":
-			atmosphereColor = new THREE.Vector3(0.92,0.57,0.475);
-			waterColor = new THREE.Vector3(50/255,50/255,160/255);
+			atmosphereColor = new THREE.Vector3(0.72,0.77,0.35);
+			waterColor = new THREE.Vector3(0.196,0.196,0.627);
 			break;
 		case "Pink":
 			atmosphereColor = new THREE.Vector3(0.42,0.97,0.375);
@@ -222,8 +223,8 @@ function updateUniforms(delta) {
 			waterColor = new THREE.Vector3(0.7,0.3,0.3);
 			break;
 		case "White":
-			atmosphereColor = new THREE.Vector3(0.8,0.54,0.45);
-			waterColor = new THREE.Vector3(0.4,0.4,0.8);
+			atmosphereColor = new THREE.Vector3(0.66,0.424,0.34);
+			waterColor = new THREE.Vector3(0.2,0.2,0.8);
 			break;
 	}
 
