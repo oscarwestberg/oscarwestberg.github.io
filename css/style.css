@@ -161,7 +161,7 @@ img:hover {
 		display: none;
 	}
 }
-@media (max-width: 600px) {
+@media (max-width: 650px) {
 	#container {
 		width: 300px;
 	}

@@ -231,7 +231,8 @@ float noise4 (vec3 pos, out vec3 gradient) {
 
 // Calculate water color using the Blinn-Phong shading model
 vec4 colorWater(vec3 L) {
-  vec4 diffuseColor = vec4(5.0/266.0, 82.0/255.0, 199.0/255.0, 1.0) * (2.0/3.0) + vec4(waterColor, 1.0) * (1.0/3.0);
+  // Mix user input of water color with more realistic blue water color
+  vec4 diffuseColor = vec4(5.0/266.0, 82.0/255.0, 199.0/255.0, 1.0) * (1.0/3.0) + vec4(waterColor, 1.0) * (2.0/3.0);
   vec4 ambientColor = ambientLight * diffuseColor;
   vec4 specularColor = vec4(1.0,1.0,1.0,1.0);
 

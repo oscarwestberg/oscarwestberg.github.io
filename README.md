@@ -1,5 +1,7 @@
 # Oscar Westberg's Website
+http://oscarwestberg.github.io
 Displays work, projects, artwork and contact information.
+There is alot of magic happening in the folder webgl, please check it out! http://oscarwestberg.github.io/webgl/index.html
 
 ## Libraries used
 * [Three.js](https://github.com/mrdoob/three.js)

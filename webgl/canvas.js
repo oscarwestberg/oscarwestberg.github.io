@@ -1,6 +1,7 @@
-// Noise type
+// Fix last noise type
 // Clouds
-// sun?
+// Shore anti aliasing
+// Fixa proper shading med interpolerad vertex
 
 // Initialize THREE.js
 var scene = new THREE.Scene();
@@ -235,7 +236,7 @@ function updateUniforms(delta) {
 	planetUniforms.noiseIntensity.value = $("#noiseIntensity").val()/1000;
 	planetUniforms.noiseType.value = $("#noiseType").val();
 	planetUniforms.noiseVariation.value = $("#noiseVariation").val()/70;
-	planetUniforms.waterColor.value = waterColor;
+	planetUniforms.waterColor.value = new THREE.Vector3(document.getElementById('waterColor').color.rgb[0],document.getElementById('waterColor').color.rgb[1],document.getElementById('waterColor').color.rgb[2]);
 	planetUniforms.shoreColor.value = new THREE.Vector3(document.getElementById('shoreColor').color.rgb[0],document.getElementById('shoreColor').color.rgb[1],document.getElementById('shoreColor').color.rgb[2]);
 	planetUniforms.diffuseMaterial.value = new THREE.Vector4(document.getElementById('landColor').color.rgb[0],document.getElementById('landColor').color.rgb[1],document.getElementById('landColor').color.rgb[2],1);
 
