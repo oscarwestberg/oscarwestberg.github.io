@@ -195,9 +195,6 @@ float noise3 (vec3 pos, out vec3 gradient) {
   vec3 temp; // Vector acting as placeholder for gradient value
   const int levels = 8; // Levels of fractal noise
   gradient = vec3(0.0,0.0,0.0); // Initialize gradient
-
-  // Variables altering the look of the resulting ridged noise
-  float limit = 0.009; 
   float noiseDec = 0.3; // Alters how much the contribution variable increases noise
 
   for(int i = 0; i <= levels; i++) {
@@ -220,27 +217,35 @@ float noise4 (vec3 pos, out vec3 gradient) {
 
   float noise = noise2(pos, gradient);
   // A single octave noise level, where this noise reaches a certain threshold rivers will be generated
-  float riverNoise = abs(snoise(pos * 0.052 + noiseVariation, temp) * noiseIntensity * narrowness);
+  float riverNoise = abs(snoise(pos * 0.052 + noiseVariation, temp) * noiseIntensity);
   noise = riverNoise > threshold ? noise : smoothstep(0.0, threshold, riverNoise) * noise;
 
   return noise;
 }
 
 // Returns a noise value used for rendering clouds
+// Clouds are generated using both fractal and ridged fractal noise
 float createClouds() {
-  float divider = 0.009;
-  vec3 temp;
-  float timeDiv = 0.02; // Adds some variation to the noise
+  vec3 temp; // Vector acting as placeholder for gradient value which isn't needed in this situation
+  float timeDiv = -0.01; // Adds some variation to the noise
+  float divider = 0.009; // Adjust to appropriate size
 
-  // Fractal noise using values that create decent looking clouds
-  float noise = snoise(pos * divider + time * timeDiv, temp) + 0.1;
-  noise += snoise(pos * divider * 2.0  + time * timeDiv, temp) / 1.5;
-  noise += snoise(pos * divider * 4.0 + time * timeDiv, temp) / 3.0;
-  noise += level < 3000.0 ? snoise(pos * divider * 8.0 + time * timeDiv, temp) / 5.0 : 0.0;
-  noise += level < 2000.0 ? snoise(pos * divider * 32.0 + time * timeDiv, temp) / 15.0 : 0.0;
-  noise += level < 1000.0 ? snoise(pos * divider * 64.0 + time * timeDiv, temp) / 30.0 : 0.0;
+  // First, apply some fractal noise as base
+  float noise = (1.0 - abs(snoise(pos * divider + time * timeDiv, temp)) - 0.6) / 5.0;
+  noise += (1.0 - abs(snoise(pos * divider * 2.0 + time * timeDiv, temp)) - 0.6) / 1.5;
+  noise += (1.0 - abs(snoise(pos * divider * 4.0 + time * timeDiv, temp)) - 0.6) / 2.5;
+  noise += level < 2000.0 ? (1.0 - abs(snoise(pos * divider * 8.0 + time * timeDiv, temp)) - 0.6) / 8.0 : 0.0;
 
-  return clamp(noise,0.0,0.9);
+  // Sexondly, apply regular fractal noise for details and realism
+  noise += snoise(pos * divider + time * timeDiv, temp) / 2.0;
+  noise += snoise(pos * divider * 8.0 + time * timeDiv, temp) / 8.0;
+  noise += snoise(pos * divider * 16.0 + time * timeDiv, temp) / 16.0;
+  noise += level < 2000.0 ? snoise(pos * divider * 32.0 + time * timeDiv, temp) / 20.0 : 0.0;
+  noise += level < 1500.0 ? snoise(pos * divider * 64.0 + time * timeDiv, temp) / 30.0 : 0.0;
+
+  // Only want to return acceptable values
+  noise *= 1.5;
+  return clamp(noise, 0.0,1.0);
 }
 
 // Calculate water color using the Blinn-Phong shading model

@@ -16,7 +16,7 @@ var planetGeometry = new THREE.SphereGeometry( radius, 70, 70);
 var sunGeometry = new THREE.SphereGeometry( radius, 40, 40);
 radius += 0.1; // Prevents clipping problems between atmosphere and planet
 var atmosphereGeometry = new THREE.SphereGeometry(radius*1.025, 100, 100);
-var atmosphereGroundGeometry = new THREE.SphereGeometry(radius*1.01, 100, 100);
+var atmosphereGroundGeometry = new THREE.SphereGeometry(radius*1.01, 70, 70);
 
 var sunColor = new THREE.Vector4(1,0.765,0.302,1);
 var clock = new THREE.Clock();
