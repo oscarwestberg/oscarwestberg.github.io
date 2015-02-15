@@ -19,9 +19,9 @@
       <p>Noise Type</p>
       <select id="noiseType" style="font-size: 9pt">
         <option value="1">Fractal noise</option> 
-        <option value="2" selected>Abs fractal noise</option>
-        <option value="3">Ridged fractal noise</option>
-        <option value="4">Fractal noise, ridged rivers</option>
+        <option value="2">Abs fractal noise</option>
+        <option value="3" selected>Ridged fractal noise</option>
+        <option value="4">[BETA] Abs with rivers</option>
       </select>
       
       <p>Noise Intensity</p>
@@ -32,17 +32,21 @@
       <div id="noiseVariation"></div>
       <p id="noiseVariationValue" style="color:gray"></p>
 
+      <p>Water level</p>
+      <div id="waterLevel"></div>
+      <p id="waterLevelValue" style="color:gray"></p>
+
       <p>Land color</p>
       <input class="color" id="landColor" value="669501">
       
       <p>Shore color</p> 
-       <input class="color" id="shoreColor" value="977342">
+      <input class="color" id="shoreColor" value="977342">
 
-       <p>Water color</p> 
-       <input class="color" id="waterColor" value="434CD1">
+      <p>Water color</p> 
+      <input class="color" id="waterColor" value="434CD1">
 
-      <br>
-      <input type="checkbox" id="renderAtmosphere"><p style="display:inline-block; padding-left:5px;">Render atmosphere</p>
+      <p>Cloud color</p> 
+      <input class="color" id="cloudColor" value="FFFFFF">
 
       <p>Atmosphere Color</p>
       <select id="atmosphereColor">
@@ -53,9 +57,11 @@
         <option value="White" selected>White</option>
       </select>
 
-      <p>Water level</p>
-      <div id="waterLevel"></div>
-      <p id="waterLevelValue" style="color:gray"></p>
+      <br>
+      <input type="checkbox" id="renderAtmosphere"><p style="display:inline-block; padding-left:5px;">Render atmosphere</p>
+
+      <br>
+      <input type="checkbox" id="renderClouds" checked><p style="display:inline-block; padding-left:5px;">Render clouds</p>
 
       <footer>
         <p>Oscar Westberg</p>

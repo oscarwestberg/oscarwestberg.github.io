@@ -1,8 +1,3 @@
-// Fix last noise type
-// Clouds
-// Shore anti aliasing
-// Fixa proper shading med interpolerad vertex
-
 // Initialize THREE.js
 var scene = new THREE.Scene();
 var width = window.innerWidth - 200;
@@ -19,6 +14,7 @@ document.body.appendChild( renderer.domElement );
 var radius = 100;
 var planetGeometry = new THREE.SphereGeometry( radius, 70, 70);
 var sunGeometry = new THREE.SphereGeometry( radius, 40, 40);
+radius += 0.1; // Prevents clipping problems between atmosphere and planet
 var atmosphereGeometry = new THREE.SphereGeometry(radius*1.025, 100, 100);
 var atmosphereGroundGeometry = new THREE.SphereGeometry(radius*1.01, 100, 100);
 
@@ -66,7 +62,9 @@ SHADER_LOADER.load(
 		    noiseVariation: {type: "f", value: 0},
 		    waterColor: {type: "v3", value: placeholderColor},
 		    renderLevels: {type: "fv1", value: [6000.0, 6000.0, 6000.0, 5000.0, 1800.0, 950.0, 850.0, 500.0, 500, 500]},
-		    shoreColor: {type: "v3", value: placeholderColor}
+		    shoreColor: {type: "v3", value: placeholderColor},
+		    cloudColor: {type: "v3", value: placeholderColor},
+		    renderClouds: {type: "f", value: 1}
 		};
 
 		sunUniforms = {
@@ -194,6 +192,11 @@ function render() {
 		atmosphereGroundMesh.visible = false;
 	}
 
+	if($('#renderClouds').prop('checked'))
+		planetUniforms.renderClouds.value = 1;
+	else 
+		planetUniforms.renderClouds.value = 0;
+
 	renderer.render( scene, camera );
 	
 	// Call render again
@@ -203,29 +206,23 @@ function render() {
 function updateUniforms(delta) {
 	var atmosphereColor; 
 	var color = $("#atmosphereColor").val();
-	var waterColor = new THREE.Vector3(0,0,0.8);
 
 	// Handle atmosphere color
 	switch(color) {
 		case "Blue":
 			atmosphereColor = new THREE.Vector3(0.72,0.77,0.35);
-			waterColor = new THREE.Vector3(0.196,0.196,0.627);
 			break;
 		case "Pink":
 			atmosphereColor = new THREE.Vector3(0.42,0.97,0.375);
-			waterColor = new THREE.Vector3(0.7,0.2,0.4);
 			break;
 		case "Green":
 			atmosphereColor = new THREE.Vector3(0.72,0.37,0.575);
-			waterColor = new THREE.Vector3(0.2,0.7,0.3);
 			break;
 		case "Orange":
 			atmosphereColor = new THREE.Vector3(0.36,0.524,0.79);
-			waterColor = new THREE.Vector3(0.7,0.3,0.3);
 			break;
 		case "White":
 			atmosphereColor = new THREE.Vector3(0.66,0.424,0.34);
-			waterColor = new THREE.Vector3(0.2,0.2,0.8);
 			break;
 	}
 
@@ -238,6 +235,7 @@ function updateUniforms(delta) {
 	planetUniforms.noiseVariation.value = $("#noiseVariation").val()/70;
 	planetUniforms.waterColor.value = new THREE.Vector3(document.getElementById('waterColor').color.rgb[0],document.getElementById('waterColor').color.rgb[1],document.getElementById('waterColor').color.rgb[2]);
 	planetUniforms.shoreColor.value = new THREE.Vector3(document.getElementById('shoreColor').color.rgb[0],document.getElementById('shoreColor').color.rgb[1],document.getElementById('shoreColor').color.rgb[2]);
+	planetUniforms.cloudColor.value = new THREE.Vector3(document.getElementById('cloudColor').color.rgb[0],document.getElementById('cloudColor').color.rgb[1],document.getElementById('cloudColor').color.rgb[2]);
 	planetUniforms.diffuseMaterial.value = new THREE.Vector4(document.getElementById('landColor').color.rgb[0],document.getElementById('landColor').color.rgb[1],document.getElementById('landColor').color.rgb[2],1);
 
 	// Atmosphere
