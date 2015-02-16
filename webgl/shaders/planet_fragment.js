@@ -251,7 +251,8 @@ float createClouds() {
 // Calculate water color using the Blinn-Phong shading model
 vec4 colorWater(vec3 L) {
   // Mix user input of water color with more realistic blue water color
-  vec4 diffuseColor = vec4(5.0/266.0, 82.0/255.0, 199.0/255.0, 1.0) * (1.0/3.0) + vec4(waterColor, 1.0) * (2.0/3.0);
+  //vec4 diffuseColor = vec4(5.0/266.0, 82.0/255.0, 199.0/255.0, 1.0) * (1.0/3.0) + vec4(waterColor, 1.0) * (2.0/3.0);
+  vec4 diffuseColor = vec4(waterColor, 1.0);
   vec4 ambientColor = ambientLight * diffuseColor;
   vec4 specularColor = vec4(1.0,1.0,1.0,1.0);
 
