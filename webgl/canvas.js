@@ -95,7 +95,8 @@ SHADER_LOADER.load(
 			atmosphereColor: {type: "v3",value: placeholderColor},
 			tDisplacement: {type: "t",value: 0},
 			tSkyboxDiffuse: {type: "t",value: 0},
-			fNightScale: {type: "f",value: 1}
+			fNightScale: {type: "f",value: 1},
+			level: { type: "f", value: camera.position.length()}
 		};
 
 		// Load shaders using Shader Loader JS
@@ -243,6 +244,7 @@ function updateUniforms(delta) {
 	atmosphereUniforms.fCameraHeight.value = cameraHeight;
 	atmosphereUniforms.fCameraHeight2.value = cameraHeight * cameraHeight;
 	atmosphereUniforms.v3InvWavelength.value = new THREE.Vector3(1 / Math.pow(atmosphereColor.x,4),1 / Math.pow(atmosphereColor.y,4),1 / Math.pow(atmosphereColor.z,4));
+	atmosphereUniforms.level.value = camera.position.distanceTo(new THREE.Vector3(0,0,0));
 }
 
 // Update window if resized
@@ -252,3 +254,15 @@ $(window).resize(function( event ) {
 	camera.aspect = width / window.innerHeight;
 	camera.updateProjectionMatrix();
 });
+
+// Handle user browser notification
+// IE can't even render the planet
+// FF produces weird noise artefacts that I don't have time to fix ( related to sphere geometry? )
+var isFirefox = typeof InstallTrigger !== 'undefined';
+var isIE = /*@cc_on!@*/false || !!document.documentMode;
+if(isIE || isFirefox){
+	$("body").before("<h2 style='color:red;' id='browserCheck'>This application runs the best in the newest versions of safari or chrome</h2>");
+	$("#renderClouds").remove();
+	$("#renderCloudsP").remove();
+}
+	

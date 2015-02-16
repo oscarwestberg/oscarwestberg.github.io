@@ -12,6 +12,7 @@
 
 
 uniform float fNightScale;
+uniform float level;
 
 varying vec3 c0;
 varying vec3 c1;
@@ -28,7 +29,8 @@ void main (void)
 	// Only values for alpha over a certain threshold are acounted for, these are the values around the edges
 	// They are then normalized for a smooth transition
 	float alpha = gl_FragColor.x + gl_FragColor.y + gl_FragColor.z;
-	float threshold = 0.2;//(atmosphereColor.x + atmosphereColor.y + atmosphereColor.z) * 1.06;
+	float threshold = level > 1000.0 ? 0.4 : 0.2;
+
 
 	alpha = max(alpha - threshold,0.0);
 	alpha = (alpha / (0.4));

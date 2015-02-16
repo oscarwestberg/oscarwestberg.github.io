@@ -152,10 +152,13 @@ float noise1 (vec3 pos, out vec3 gradient) {
   gradient = temp * _noiseIntensity;
 
   for(int i = 2; i <= levels; i++) {
-    float divider = pow(2.0, float(i)); // Used for fractal noise
+    float divider = pow(2.0, float(i)); // Used for fractal noise, higher octave every loop
     float contribution = pow(1.4, float(i)); // How much every level of noise contributes to the final value
 
-    // Only applies noise if the camera is close enough
+    // level < renderLevels[i] - Only applies noise if the camera is close enough
+    // pos * divider * multiplier - different noise value for every position on the sphere
+    // temp acts as a placeholder for the gradient value, which is then added to the actual gradient
+    // noiseIntensity / contribution - noiseIntensity is a user defined variable, contribution ensures high octave noise levels don't contribute as much as low level
     noise += level < renderLevels[i] ? snoise(pos * divider * multiplier + noiseVariation, temp) * noiseIntensity / contribution : 0.0;
     gradient += level < renderLevels[i] ? temp * noiseIntensity / contribution : vec3(0.0,0.0,0.0);
   }
@@ -174,14 +177,13 @@ float noise2 (vec3 pos, out vec3 gradient) {
 
   // Variables altering the look of the resulting noise with a rounder look
   float size = 0.2; // Smaller value = larger continents
-  float noiseDec = 0.4; // Alters how much the contribution variable increases noise
   float decrease = 0.02; // Because of absolute values, noise needs to be decreased 
 
   for(int i = 0; i <= levels; i++) {
     float divider = pow(2.0, float(i)) * 0.01; // Used for fractal noise, 0.01 compensates for large sphere size
     float contribution = pow(1.4, float(i)); // How much every level of noise contributes to the final value
 
-    noise += level < renderLevels[i-3] ? abs(snoise(pos * size * divider + noiseVariation, temp) * _noiseIntensity) / (contribution * noiseDec) - decrease : -decrease;
+    noise += level < renderLevels[i-3] ? abs(snoise(pos * size * divider + noiseVariation, temp) * _noiseIntensity) / (contribution * 0.4) - decrease : -decrease;
     gradient += level < renderLevels[i-3] ? temp * _noiseIntensity / contribution : vec3(0.0,0.0,0.0);
   }
 
@@ -232,7 +234,7 @@ float createClouds() {
 
   // First, apply some fractal noise as base
   float noise = (1.0 - abs(snoise(pos * divider + time * timeDiv, temp)) - 0.6) / 5.0;
-  noise += (1.0 - abs(snoise(pos * divider * 2.0 + time * timeDiv, temp)) - 0.6) / 1.5;
+  noise += (1.0 - abs(snoise(pos * divider * 2.0 + time * timeDiv, temp)) - 0.6) / 1.6;
   noise += (1.0 - abs(snoise(pos * divider * 4.0 + time * timeDiv, temp)) - 0.6) / 2.5;
   noise += level < 2000.0 ? (1.0 - abs(snoise(pos * divider * 8.0 + time * timeDiv, temp)) - 0.6) / 8.0 : 0.0;
 
@@ -251,7 +253,6 @@ float createClouds() {
 // Calculate water color using the Blinn-Phong shading model
 vec4 colorWater(vec3 L) {
   // Mix user input of water color with more realistic blue water color
-  //vec4 diffuseColor = vec4(5.0/266.0, 82.0/255.0, 199.0/255.0, 1.0) * (1.0/3.0) + vec4(waterColor, 1.0) * (2.0/3.0);
   vec4 diffuseColor = vec4(waterColor, 1.0);
   vec4 ambientColor = ambientLight * diffuseColor;
   vec4 specularColor = vec4(1.0,1.0,1.0,1.0);
