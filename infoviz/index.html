@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <title>Information Visualization Project</title>
+        <meta name="description" content="">
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+
+    <body> 
+        <div id="tooltips"></div>
+
+        
+            <div id="main-toolbar" class="toolbar">
+                <div class="toolbar-item">
+                    <button id="clear-button" type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Clear selections
+                    </button>
+                </div>
+                <div id="selection">
+                    <div class="toolbar-item country"><strong class="btn btn-info">World</strong></div>
+                </div>
+            </div>
+
+            <!-- Modules -->
+            <div class="container-fluid">
+            <!-- row of columns -->
+            <div class="row module-row">
+
+                <!-- Pie chart -->
+                <div class="col-xs-6 module">
+                    <div class="row">
+                        <div class="toolbar">
+                            <h2 id="pie-label">CO2 emissions by sector 2008</h2>
+                        </div>
+                    </div>
+                    <div class="row module-content">
+                        <div id="pie"></div>
+                    </div>
+                </div>
+
+                <!-- Map -->
+                <div class="col-xs-6 module">
+                    <!-- Map button -->
+                    <div class="row">
+                        <div class="toolbar">
+                            <h2 id="map-label">CO2 emissions 2008</h2>
+                            <button id="map-button" type="button" class="btn btn-default module-button"></button>
+                        </div>
+                    </div>
+                    <div class="row module-content">
+                        <div id="map"></div>
+                    </div>
+                </div>
+
+            </div> <!-- /row -->
+
+            <div class="row module-row">
+
+                <!-- Area graph -->
+                <div class="col-xs-6 module">
+                    <div class="row">
+                        <div id="area-toolbar" class="toolbar">
+                            <h2 id="area-label">Electricity production over time</h2>
+                        </div>
+                    </div>
+                    <div class="row module-content">
+                        <div id="area"></div>
+                    </div>
+                </div>
+
+                <!-- CO2 line graph -->
+                <div class="col-xs-6 module">
+                    <div class="row">
+                        <div class="toolbar">
+                            <h2 id="co2-label">CO2 emissions over time (total)</h2>
+                            <button id="right-button" type="button" class="btn btn-default module-button">Change to per capita</button>
+                        </div>
+                    </div>
+                    <div class="row module-content">
+                        <div id="co2"></div>
+                    </div>
+                </div>
+
+            </div> <!-- /row -->
+        </div>
+
+
+        <script src="js/vendor/jquery-2.1.3.min.js"></script>
+        <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="js/vendor/d3.min.js"></script>
+        <script src="js/vendor/topojson.v1.min.js"></script>
+
+        <!--modules js-->
+        <script src="js/functions.js"></script>
+        <script src="js/area.js"></script>
+        <script src="js/CO2.js"></script>
+        <script src="js/map.js"></script>
+        <script src="js/pie.js"></script>
+        <script src="js/sp.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>
