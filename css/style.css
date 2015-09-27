@@ -108,6 +108,15 @@ img:hover {
     /*background:#000fff;*/
     width: 900px;
 }
+.award {
+	position: absolute;
+	right: -20px;
+	top: -20px;
+	z-index: 100;
+}
+.award img:hover {
+	opacity: 1;
+}
 .item { 
 	width: calc(300px - 20px);
 	margin: 5px;
