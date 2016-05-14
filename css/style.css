@@ -2,6 +2,8 @@ html {
 	height: 100%;
 }
 body { 
+	background-image: url("../img/bg.png");
+    background-repeat: repeat;
 	margin: 0; 
 	width: 100%;
 	height: 100%;
@@ -93,13 +95,13 @@ p {
 	color: darkgray;
 }
 img:hover {
-	filter: brightness(120%);
+/*	filter: brightness(120%);
 	-webkit-filter: brightness(120%);
 	-moz-filter: brightness(120%);
 	-o-filter: brightness(120%);
 	-ms-filter: brightness(120%);
 
-	opacity:0.6;
+	opacity:0.6;*/
 }
 #container {
 	height:500px;
@@ -118,7 +120,7 @@ img:hover {
 	opacity: 1;
 }
 .item { 
-	width: calc(300px - 20px);
+	width: 280px;
 	margin: 5px;
 	padding: 5px;
 	padding-bottom:0px;
@@ -127,15 +129,40 @@ img:hover {
 	border-radius: 5px;
 	background-color: rgb(39,40,34);
 }
+.item.oscar {
+	color: white;
+
+	image-rendering:optimizeSpeed;             /* Legal fallback */
+	image-rendering:-moz-crisp-edges;          /* Firefox        */
+	image-rendering:-o-crisp-edges;            /* Opera          */
+	image-rendering:-webkit-optimize-contrast; /* Safari         */
+	image-rendering:optimize-contrast;         /* CSS3 Proposed  */
+	image-rendering:crisp-edges;               /* CSS4 Proposed  */
+	image-rendering:pixelated;                 /* CSS4 Proposed  */
+	-ms-interpolation-mode:nearest-neighbor;   /* IE8+           */
+}
 .item.work { 
 	color: rgba(241,39,114,1);
 }
 .item.project {
 	color: rgba(132,214,45,1);
 }
-.item.art{
+.item.art {
 	color: rgba(174,129,247,1);
 }
+
+hr {
+	width: 94%;
+}
+
+.item.work hr {
+	border: 1px solid rgba(241,39,114,1);
+}
+
+.item.project hr {
+	border: 1px solid rgba(132,214,45,1);
+}
+
 @media (max-width: 1300px) {
 	#container {
 		width: 600px;
