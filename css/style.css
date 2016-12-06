@@ -129,18 +129,6 @@ img:hover {
 	border-radius: 5px;
 	background-color: rgb(39,40,34);
 }
-.item.oscar {
-	color: white;
-
-	image-rendering:optimizeSpeed;             /* Legal fallback */
-	image-rendering:-moz-crisp-edges;          /* Firefox        */
-	image-rendering:-o-crisp-edges;            /* Opera          */
-	image-rendering:-webkit-optimize-contrast; /* Safari         */
-	image-rendering:optimize-contrast;         /* CSS3 Proposed  */
-	image-rendering:crisp-edges;               /* CSS4 Proposed  */
-	image-rendering:pixelated;                 /* CSS4 Proposed  */
-	-ms-interpolation-mode:nearest-neighbor;   /* IE8+           */
-}
 .item.work { 
 	color: rgba(241,39,114,1);
 }
