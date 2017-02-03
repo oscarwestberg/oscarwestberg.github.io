@@ -2,15 +2,13 @@ html {
 	height: 100%;
 }
 body { 
-	background-image: url("../img/bg.png");
-    background-repeat: repeat;
 	margin: 0; 
 	width: 100%;
 	height: 100%;
 	position: relative;
 	font-family: "Courier New", Courier, monospace;
-	color: black;
-	background-color: darkgray;
+	color: lightgray;
+	background-color: #564848;
 }
 header {
 	text-align: center;
@@ -42,6 +40,7 @@ nav {
     float: left;
     position: fixed;
     background-color: rgb(39,40,34);
+    z-index: 5;
 
     -webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -151,17 +150,18 @@ hr {
 	border: 1px solid rgba(132,214,45,1);
 }
 
-@media (max-width: 1300px) {
-	#container {
-		width: 600px;
+@media (orientation: portrait) {
+	#wrapper {
+		width: 90%;
 	}
-}
-@media (max-width: 1000px) {
+	#container {
+		width: 100%;
+	}
 	nav {
 		float: none;
 		text-align: center;
-		height: 120px;
-		width: 340px;
+		height: 15%;
+		width: 70%;
 		position: fixed;
 		top: 10px;
 		z-index: 4;
@@ -173,20 +173,60 @@ hr {
 	}
 	nav a {
 		display: inline;
+		font-size: 4vw;
+	}
+	nav a.contact {
+		font-size: 2.8vw;
 	}
 	nav h1 {
 		text-align: center;
 		margin-top: 0;
+		padding-top: 10px;
+		font-size: 4vw;
 	}
 	#container {
-		padding-top: 20px;
+		padding-top: 20%;
 	}
 	.headerImg {
 		display: none;
 	}
+	.item {
+ 		width: 80%;
+ 		margin-left: 5%;
+ 		margin-right: 5%;
+ 		margin-bottom: 5%;
+ 		padding: 5%;
+	}
+	.item img {
+		width: 100%;
+		height: auto;
+	}
+	.item h1 {
+		font-size: 6vw;
+	}
+	.item h2 {
+		margin-top: 3%;
+		font-size: 5vw;
+	}
+	.item h3 {
+		font-size: 4vw;
+	}	
+	.item p {
+		font-size: 3.5vw;
+	}
+	.item hr {
+		border: 5px solid !important;
+	}
+	#home {
+		font-size: 0;
+	}
 }
-@media (max-width: 650px) {
+
+@media (orientation: landscape) and (max-width: 1300px) {
 	#container {
-		width: 300px;
+		width: 80%;
+		margin-left: 20%;
+	}
+	#wrapper {
 	}
 }
