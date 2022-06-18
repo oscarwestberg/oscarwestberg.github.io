@@ -15,6 +15,7 @@ import {
   headerImage,
 } from './layout.module.css'
 import { StaticImage } from 'gatsby-plugin-image'
+import Helmet from 'react-helmet';
 
 function navClick() {
   var nav = document.getElementById("nav");
@@ -29,6 +30,9 @@ function navClick() {
 const Layout = ({ children }) => {
   return (
     <div className={container}>
+      <Helmet>
+        <title>Oscar Westberg</title>
+      </Helmet>
       <div className={navigator}>
         <header className={siteTitle}>
           <Link to="/" className={navLinkText}>OSCAR WESTBERG</Link>
