@@ -1,15 +1,17 @@
-# Oscar Westberg's Website
-http://oscarwestberg.github.io  
-Displays work, projects, artwork and contact information.  
-There is alot of magic happening in the folder webgl, please check it out!  
-http://oscarwestberg.github.io/webgl/index.html
+# Oscar Westberg's website
+This is my personal art-focused website. It's made using [gatsby](https://www.gatsbyjs.com).
 
-## Libraries used
-* [Three.js](https://github.com/mrdoob/three.js)
-* [JQuery](http://jquery.com)
-* [WebGL Shader Loader JS](https://github.com/codecruzer/webgl-shader-loader-js)
-* [WebGL-Noise](https://github.com/ashima/webgl-noise)
-* [Trackball Controls](https://github.com/mrdoob/three.js/blob/master/examples/js/controls/TrackballControls.js)
-* [noUiSlider](http://refreshless.com/nouislider/)
-* [jscolor](http://jscolor.com)
-* [Masonry](http://masonry.desandro.com)
+## TODO
+
+### Content
+- [ ] Blog section
+  - [ ] Blog RSS
+- [ ] Links section
+
+### Fixes
+- [ ] Nav sub sections (comics)
+- [ ] Back button when in a comic
+- [ ] Change mouse icon when hovering gallery image
+- [ ] Title on gallery images
+- [ ] Only use article tag when suitable
+- [ ] Structure css better

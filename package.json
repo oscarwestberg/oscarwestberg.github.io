@@ -1,0 +1,32 @@
+{
+  "name": "oscarwestberg",
+  "version": "1.0.0",
+  "private": true,
+  "description": "oscarwestberg",
+  "author": "Oscar Westberg",
+  "keywords": [
+    "gatsby"
+  ],
+  "scripts": {
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean"
+  },
+  "dependencies": {
+    "@browniebroke/gatsby-image-gallery": "^7.0.6",
+    "gatsby": "^4.7.1",
+    "gatsby-plugin-image": "^2.7.0",
+    "gatsby-plugin-manifest": "^4.16.0",
+    "gatsby-plugin-mdx": "^3.7.0",
+    "gatsby-plugin-sass": "^5.7.0",
+    "gatsby-plugin-sharp": "^4.7.0",
+    "gatsby-remark-images": "^6.16.0",
+    "gatsby-source-filesystem": "^4.7.0",
+    "gatsby-transformer-sharp": "^4.7.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "sass": "^1.49.7"
+  }
+}
