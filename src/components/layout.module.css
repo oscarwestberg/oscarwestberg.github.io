@@ -138,16 +138,14 @@ nav {
   height: 30px;
 }
 
-.nav-link-item-social, .nav-link-item-social-wide {
+.nav-link-item-social {
   padding-right: 1rem;
-}
-
-.nav-link-item-social img {
   height: 1.5rem;
   width: 1.5rem;
 }
 
-.nav-link-item-social-wide img {
+.nav-link-item-social-wide {
+  padding-right: 1rem;
   height: 1.5rem;
   width: 2.3rem;
 }
