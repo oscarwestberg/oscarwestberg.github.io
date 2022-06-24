@@ -2,15 +2,19 @@ import * as React from 'react'
 import { graphql } from 'gatsby'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 import Layout from '../../components/layout'
+import '../../css/content.css'
 
 const Comic = ({ data }) => {
   return (
     <Layout>
-      <article>
+      <div class="content">
+        <a href="../">
+          <h4>← Back</h4>
+        </a>
         <MDXRenderer>
           {data.mdx.body}
         </MDXRenderer>
-      </article>
+      </div>
     </Layout>
   )
 }

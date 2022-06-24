@@ -7,6 +7,7 @@ import {
   navLinkItem,
   navLinkTextCurrent,
   navLinkItemSocial,
+  navLinkItemSocialWide,
   navLinkText,
   siteTitle,
   navigator,
@@ -37,7 +38,7 @@ const Layout = ({ children }) => {
         <header className={siteTitle}>
           <Link to="/" className={navLinkText}>OSCAR WESTBERG</Link>
           <div className={headerImage}>
-            <StaticImage alt="Logo" src="../images/logo.png"/>
+            <StaticImage alt="Logo" src="../images/logo.png" loading="eager"/>
           </div>
         </header>
         <button className={dropdownBtn} onClick={() => navClick()}>
@@ -82,6 +83,11 @@ const Layout = ({ children }) => {
             <li className={navLinkItemSocial}>
               <a href="https://instagram.com/oscar_westberg/" className={navLinkText}>
                 <StaticImage alt="Instagram" src="../images/instagram.svg"/>
+              </a>
+            </li>
+            <li className={navLinkItemSocialWide}>
+              <a href="https://ko-fi.com/oscarwestberg" className={navLinkText}>
+                <StaticImage alt="Ko-fi" src="../images/ko-fi.png"/>
               </a>
             </li>
           </ul>

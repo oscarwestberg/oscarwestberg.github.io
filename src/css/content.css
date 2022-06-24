@@ -1,4 +1,4 @@
-/* ------------------------ Container ------------------------ */
+/* ------------------------ Project on main page ------------------------ */
 
 .project {
   display: flex;
@@ -7,14 +7,39 @@
   position: relative;
 }
 
-.project p {
-  position: absolute;
-  top: 8px;
-  left: 16px;
-	-webkit-text-stroke: 2px rgb(255, 255, 255);
-  text-stroke: 2px white;
+/* ------------------------ Content ------------------------ */
+
+.content a {
+  text-decoration: none;
 }
 
-.imageAndText {
-  position: relative;
+.content h1, h2, h3, h3, h4, p, li {
+  color: black;
+}
+
+.content h1 {
+  font-size: 1.7rem;
+  font-weight: 270;
+  margin-bottom: 0.5rem;
+}
+
+.content h2 {
+  font-size: 1.5rem;
+  font-weight: 250;
+}
+
+.content h4 {
+  font-size: 1rem;
+  font-weight: 200;
+}
+
+.content p {
+  font-size: 1.1rem;
+  font-weight: 200;
+  margin-bottom: 1rem;
+}
+
+p.year {
+  margin-top: 0;
+  padding-top: 0;
 }

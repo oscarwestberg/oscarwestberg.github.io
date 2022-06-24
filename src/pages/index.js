@@ -7,7 +7,7 @@ import { Link } from 'gatsby'
 const IndexPage = () => {
   return (
     <Layout>
-      <article>
+      <div class="content">
         <h1>About</h1>
         <p>I'm a Swedish illustrator and comic creator mainly drawing in traditional ink. 
           I'm currently working on personal projects but I'm open for business inquiries. 
@@ -29,7 +29,7 @@ const IndexPage = () => {
             <StaticImage alt="Print" src="../images/projects/malenia.png"/>
           </Link>
         </div>
-      </article>
+      </div>
     </Layout>
   )
 }

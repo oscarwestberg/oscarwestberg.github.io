@@ -2,24 +2,25 @@ import * as React from 'react'
 import { Link as GatsbyLink, graphql } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import Layout from '../../components/layout'
+import '../../css/content.css'
 
 const ComicsPage = ({ data }) => {
   return (
     <Layout>
       {
         data.allMdx.nodes.map(node => (
-          <article key={node.id}>
+          <div class="content">
             <GatsbyLink to={`/comics/${node.slug}`}>
               <h1>{node.frontmatter.title}</h1>
             </GatsbyLink>
-            <p>{node.frontmatter.date}</p>
+            <p class="year">{node.frontmatter.date}</p>
             <GatsbyLink to={`/comics/${node.slug}`}>
               <GatsbyImage
                 image={getImage(node.frontmatter.hero_image)}
                 alt={node.frontmatter.hero_image_alt}
               />
             </GatsbyLink>
-          </article>
+          </div>
         ))
       }
     </Layout>
