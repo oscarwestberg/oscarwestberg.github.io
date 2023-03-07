@@ -13,7 +13,12 @@ const InkPage = ({ data }) => {
 
   return (
     <Layout>
-      <Gallery images={images}/>
+      <Gallery
+        images={images}
+        colWidth={100}
+        mdColWidth={100/3}
+        gutter={0}
+      />
     </Layout>
   )
 }
@@ -26,8 +31,8 @@ query ImagesForGallery {
           publicURL
           childImageSharp {
             thumb: gatsbyImageData(
-              width: 300
-              height: 300
+              width: 500
+              height: 500
               placeholder: BLURRED
             )
             full: gatsbyImageData(layout: FULL_WIDTH)

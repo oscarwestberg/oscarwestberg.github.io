@@ -63,6 +63,16 @@ const Layout = ({ children }) => {
               </Link>
             </li>
             <li className={navLinkItem}>
+              <Link to="/illustration" getProps={({isPartiallyCurrent}) => isPartiallyCurrent ? {className: navLinkTextCurrent} : {className: navLinkText}}>
+                Illustration
+              </Link>
+            </li>
+            <li className={navLinkItem}>
+              <Link to="/about" getProps={({isPartiallyCurrent}) => isPartiallyCurrent ? {className: navLinkTextCurrent} : {className: navLinkText}}>
+                About
+              </Link>
+            </li>
+            <li className={navLinkItem}>
               <Link to="https://www.inprnt.com/gallery/oscarwestberg/" className={navLinkText}>
                 Prints
               </Link>
