@@ -33,8 +33,8 @@ query ImagesForGallery {
           publicURL
           childImageSharp {
             thumb: gatsbyImageData(
-              width: 500
-              height: 600
+              width: 700
+              height: 700
               placeholder: BLURRED
             )
             full: gatsbyImageData(layout: FULL_WIDTH)
