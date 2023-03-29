@@ -3,11 +3,12 @@ import { Link } from 'gatsby'
 import {
   container,
   mainWrapper,
+  navDivider,
   navLinks,
   navLinkItem,
   navLinkTextCurrent,
   navLinkItemSocial,
-  navLinkItemSocialWide,
+  navLinkItemStore,
   navLinkText,
   siteTitle,
   navigator,
@@ -72,7 +73,20 @@ const Layout = ({ children }) => {
                 About
               </Link>
             </li>
-            <li className={navLinkItem}>
+
+            <hr className={navDivider}/>
+            
+            <li className={navLinkItemStore}>
+              <Link to="https://ko-fi.com/oscarwestberg" className={navLinkText}>
+                Ko-fi
+              </Link>
+            </li>
+            <li className={navLinkItemStore}>
+              <Link to="https://oscarwestberg.gumroad.com" className={navLinkText}>
+                Gumroad
+              </Link>
+            </li>
+            <li className={navLinkItemStore}>
               <Link to="https://www.inprnt.com/gallery/oscarwestberg/" className={navLinkText}>
                 Prints
               </Link>
@@ -93,11 +107,6 @@ const Layout = ({ children }) => {
             <li className={navLinkItemSocial}>
               <a href="https://instagram.com/oscar_westberg/" className={navLinkText}>
                 <StaticImage alt="Instagram" src="../images/instagram.svg"/>
-              </a>
-            </li>
-            <li className={navLinkItemSocialWide}>
-              <a href="https://ko-fi.com/oscarwestberg" className={navLinkText}>
-                <StaticImage alt="Ko-fi" src="../images/ko-fi.png"/>
               </a>
             </li>
           </ul>

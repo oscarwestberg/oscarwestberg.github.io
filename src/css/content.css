@@ -11,6 +11,10 @@
 
 .content a {
   text-decoration: none;
+  color: rgb(126, 126, 126);
+  font-size: 1.1rem;
+  font-weight: 200;
+  margin-bottom: 1rem;
 }
 
 .content h1, h2, h3, h3, h4, p, li {

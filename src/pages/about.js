@@ -6,10 +6,8 @@ const AboutPage = () => {
   return (
     <Layout>
       <div class="content">
-        <h1>About</h1>
-        <p>Swedish illustrator and comic creator.</p>
-        <p>Currently open for business inquiries and personal commissions.</p>
-        <p>westbergbusiness [at] gmail</p>
+        <p>Oscar Westberg is a Swedish freelance illustrator and comic creator. Currently open for business inquiries and personal commissions.</p>
+        <p>You can reach me at <a href="mailto:westbergbusiness@gmail.com">westbergbusiness@gmail.com</a> or through social media.</p>
       </div>
     </Layout>
   )
