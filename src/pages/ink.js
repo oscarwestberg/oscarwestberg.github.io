@@ -25,7 +25,10 @@ const InkPage = ({ data }) => {
 
 export const query = graphql`
 query ImagesForGallery {
-    allFile(filter: { relativeDirectory: { eq: "ink" } }) {
+    allFile(
+      filter: { relativeDirectory: { eq: "ink" } }
+      sort: { fields: base, order: DESC }
+      ) {
       edges {
         node {
           publicURL
