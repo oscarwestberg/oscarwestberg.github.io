@@ -77,6 +77,11 @@ const Layout = ({ children }) => {
             <hr className={navDivider}/>
             
             <li className={navLinkItemStore}>
+              <Link to="/commission" getProps={({isPartiallyCurrent}) => isPartiallyCurrent ? {className: navLinkTextCurrent} : {className: navLinkText}}>
+                Commission
+              </Link>
+            </li>
+            <li className={navLinkItemStore}>
               <Link to="https://ko-fi.com/oscarwestberg" className={navLinkText}>
                 Ko-fi
               </Link>
