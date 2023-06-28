@@ -96,6 +96,11 @@ const Layout = ({ children }) => {
                 Prints
               </Link>
             </li>
+            <li className={navLinkItemStore}>
+              <Link to="https://www.drivethrurpg.com/browse.php?artist=Oscar%20Westberg" className={navLinkText}>
+                Stock Art
+              </Link>
+            </li>
           </ul>
 
           <ul className={social}>
