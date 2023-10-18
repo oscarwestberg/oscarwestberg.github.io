@@ -2,26 +2,21 @@
 
 .work {
   display: flex;
-  /* justify-content: center; */
-  /* margin-top: 1.5rem; */
-  /* position: relative; */
-
   width: 80%;
   overflow: hidden;
   margin: 0 auto;
-  /* background-color: lightblue; */
 }
 
 .workImage {
   height: 100%;
-  width: 400px;
+  width: 50%;
   object-fit: scale-down;
   padding-right: 5%;
 }
 
 /* Title, subtitle and text for a work item */
 .workText {
-  width: 400px;
+  width: 50%;
 }
 
 .centerTitle {
@@ -76,4 +71,15 @@
 p.year {
   margin-top: 0;
   padding-top: 0;
+}
+
+/* ------------------------ Phones ------------------------ */
+@media only screen and (max-width: 900px) {
+  .content h1 {
+    font-size: 1.4rem;
+  }
+
+  .work {
+    width: 100%;
+  }
 }
