@@ -7,9 +7,9 @@ This is my personal art-focused website. It's made using [gatsby](https://www.ga
 - [ ] Blog section
   - [ ] Blog RSS
 - [ ] Links section
+- [ ] Clickable items on Home
 
 ### Fixes
 - [ ] Nav sub sections (comics)
 - [ ] Change mouse icon when hovering gallery image
 - [ ] Title on gallery images
-- [ ] Use only master branch and host site from public folder

@@ -1,48 +1,68 @@
-import { graphql } from 'gatsby'
 import * as React from 'react'
+import { Link as GatsbyLink, graphql } from 'gatsby'
+import { GatsbyImage, getImage, StaticImage } from 'gatsby-plugin-image'
 import Layout from '../components/layout'
-import Gallery from '@browniebroke/gatsby-image-gallery'
+import '../css/content.css'
 
 const IndexPage = ({ data }) => {
-  const images = data.allFile.edges.map(({ node }, index) => ({
-    ...node.childImageSharp,
-    // Generate name based on the index as caption.
-    caption: '',
-    title: '',
-    colWidth: 1,
-    mdColWidth: 1
-  }))
-
   return (
     <Layout>
-      <Gallery
-        images={images}
-        colWidth={100}
-        mdColWidth={100/2}
-        gutter={0}
-      />
+      <div class="content">
+        <div class="project">
+          <StaticImage alt="Print" src="../images/index_cover.jpg"/>
+        </div>
+        <div class="centerTitle">
+          <h1>Recent work</h1>
+        </div>
+        <div class="spacer"/>
+        {
+          data.allMdx.nodes.map(node => (
+            <div>
+              <GatsbyLink to={`/work/${node.slug}`}>
+                <div class="work">
+                  <div class="workImage">
+                    <GatsbyImage
+                        image={getImage(node.frontmatter.hero_image)}
+                        alt={node.frontmatter.hero_image_alt}
+                    />
+                  </div>
+                  <div class="workText">
+                    <h1>{node.frontmatter.title}</h1>
+                    <p class="year">{node.frontmatter.date}</p>
+                    <p>{node.frontmatter.description}</p>
+                  </div>
+                </div>
+              </GatsbyLink>
+              <div class="spacer"/>
+            </div>
+          ))
+        }
+      </div>
     </Layout>
   )
 }
 
 export const query = graphql`
-query ImagesForGallery {
-    allFile(
-      filter: { relativeDirectory: { eq: "index" } }
-      sort: { fields: base, order: ASC }
+  query {
+    allMdx(
+      sort: {
+        fields: frontmatter___date,
+        order: DESC
+      }
     ) {
-      edges {
-        node {
-          publicURL
-          childImageSharp {
-            thumb: gatsbyImageData(
-              width: 700
-              height: 700
-              placeholder: BLURRED
-            )
-            full: gatsbyImageData(layout: FULL_WIDTH)
+      nodes {
+        frontmatter {
+          date(formatString: "MMMM D, YYYY")
+          title
+          description
+          hero_image {
+            childImageSharp {
+              gatsbyImageData
+            }
           }
         }
+        id
+        slug
       }
     }
   }
