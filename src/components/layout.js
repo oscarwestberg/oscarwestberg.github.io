@@ -83,12 +83,12 @@ const Layout = ({ children }) => {
             </li>
             <li className={navLinkItemStore}>
               <Link to="https://ko-fi.com/oscarwestberg" className={navLinkText}>
-                Ko-fi
+                Store (Ko-fi)
               </Link>
             </li>
             <li className={navLinkItemStore}>
               <Link to="https://oscarwestberg.gumroad.com" className={navLinkText}>
-                Gumroad
+                Store (Gumroad)
               </Link>
             </li>
             <li className={navLinkItemStore}>
@@ -105,8 +105,8 @@ const Layout = ({ children }) => {
 
           <ul className={social}>
             <li className={navLinkItemSocial}>
-              <a href="https://twitter.com/oscarwestberg" className={navLinkText}>
-                <StaticImage alt="Twitter" src="../images/twitter.svg"/>
+              <a href="https://x.com/oscarwestberg" className={navLinkText}>
+                <StaticImage alt="X" src="../images/x.svg"/>
               </a>
             </li>
             <li className={navLinkItemSocial}>
@@ -117,6 +117,11 @@ const Layout = ({ children }) => {
             <li className={navLinkItemSocial}>
               <a href="https://instagram.com/oscar_westberg/" className={navLinkText}>
                 <StaticImage alt="Instagram" src="../images/instagram.svg"/>
+              </a>
+            </li>
+            <li className={navLinkItemSocial}>
+              <a href="https://bsky.app/profile/oscarwestberg.bsky.social" className={navLinkText}>
+                <StaticImage alt="Bluesky" src="../images/bluesky.svg"/>
               </a>
             </li>
           </ul>
