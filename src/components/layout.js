@@ -83,7 +83,7 @@ const Layout = ({ children }) => {
             </li>
             <li className={navLinkItemStore}>
               <Link to="https://ko-fi.com/oscarwestberg" className={navLinkText}>
-                Store (Ko-fi)
+                Store (ko-fi)
               </Link>
             </li>
             <li className={navLinkItemStore}>
