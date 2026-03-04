@@ -1,0 +1,283 @@
+/* -------------- BODY -------------- */
+
+body {
+    /* Layout */
+    overflow-y: scroll;
+	margin: 0;
+	padding: 0;
+
+    /* Font */
+	font-family: "Courier New", Courier, monospace;
+	color: black;
+
+    /* Color */
+	background-color: rgb(250, 250, 250);
+}
+
+body p a {
+	font-family: "Courier New Bold", Courier, monospace;
+	color: black;
+}
+
+/* -------------- WRAPPER -------------- */
+
+.wrapper {
+    /* Layout */
+    margin: auto;
+    max-width: fit-content;
+	height: 100%;
+    padding-top: 20px;
+}
+
+/* -------------- NAV -------------- */
+
+nav {
+    /* Layout */
+    width: 200px;
+    float: left;
+    padding-bottom: 20px;
+    position: fixed;
+    
+    /* Color */
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 12px;
+
+    /* Other */
+    -webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+nav a {
+    /* Layout */
+	margin: 20px;
+	display: block;
+
+    /* Font */
+    font-size: 16pt;
+	text-decoration: none;
+    cursor: pointer;
+
+    /* Color */
+    color: black;
+}
+
+nav a img {
+    /* Layout */
+    width: 100%;
+    height: 100%;
+    display: block;
+    margin: auto;
+}
+
+nav a.selected {
+    /* Font */
+    text-decoration: underline;
+}
+
+nav a.contact {
+    /* Font */
+	color: rgb(58, 58, 58);
+	font-size: 12pt;
+
+    /* Layout */
+	padding-left: 20px;
+	margin: 0;
+}
+
+nav h1 {
+    /* Font */
+	text-align: left;
+	font-size: 25pt;
+
+    /* Layout */
+	padding: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+    cursor: pointer;
+}
+
+nav hr {
+    /* Layout */
+    margin-bottom: 20px;
+}
+
+/* -------------- CONTENT -------------- */
+
+.content {
+    /* Layout */
+    width: 800px;
+    min-height: 600px;
+    height: fit-content;
+    margin-left: 250px;
+    padding: 20px;
+
+    /* Color */
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 12px;
+    
+    /* Other */
+    -webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.content h1 {
+    /* Font */
+    font-size: 40px;
+    text-align: center;
+}
+
+.content a {
+    /* Font */
+	text-decoration: none;
+    cursor: pointer;
+    color: black;
+}
+
+.content .item {
+    /* Layout */
+    width: 100%;
+    min-height: 200px;
+    margin: auto;
+    margin-bottom: 20px;
+
+    /* Color */
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 12px;
+
+    /* Other */
+    -webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.content .item .wideimage img {
+    /* Layout */
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.content .item .tallimage img {
+    /* Layout */
+    width: 100%;
+}
+
+.content .item h2 {
+    /* Layout */
+    margin-top: 6px;
+}
+
+.content .itemtext {
+    /* Layout */
+    margin-left: 20px;
+    padding-bottom: 5px;
+}
+
+.content .abouttext {
+	padding: 20px;
+}
+
+/* -------------- ART GRID -------------- */
+
+.art-content {
+    /* Layout */
+	/* Not ideal but works for now */
+    height: 2750px;
+}
+
+.artImage {
+    /* Layout */
+    display: flex;
+    float: left;
+    width: 31%;
+    height: 250px;
+    margin: 1%;
+
+    /* Image */
+    object-fit: cover;
+
+    /* Other */
+    -webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+
+/* -------------- MOBILE -------------- */
+
+@media (max-width: 1200px) {
+
+body {
+	margin: 0;
+}
+
+.wrapper {
+	width: 95%;
+}
+
+/* -------------- NAV -------------- */
+
+nav {
+    /* Layout */
+    width: 100%;
+    float: top;
+    padding-bottom: 20px;
+	margin-bottom: 40px;
+    position: relative;
+}
+
+nav a img {
+	/* Hide alltogether */
+    display: none;
+}
+
+nav a {
+	/* Font */
+	font-size: 16pt;
+
+    /* Layout */
+	margin: 10px;
+	margin-left: 20px;
+	margin-bottom: 0;
+}
+
+nav a.contact {
+    /* Font */
+	font-size: 16pt;
+	color: rgb(100, 100, 100);
+}
+
+/* -------------- CONTENT -------------- */
+
+.content {
+    /* Layout */
+    width: 100%;
+    height: 100%;
+    margin-left: 0;
+    padding: 0;
+}
+
+/* -------------- ART GRID -------------- */
+
+.art-content {
+    /* Layout */
+	/* Not ideal but works for now */
+    height: 270vh;
+}
+
+.artImage {
+    /* Layout */
+	overflow: hidden;
+}
+
+.artImage img {
+	/* Layout */
+	width: 100%;
+	height: 100%;
+
+	/* Image */
+	object-fit: cover;
+}
+
+}
